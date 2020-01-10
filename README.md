@@ -1,2 +1,3 @@
-# age_mixing_patterns_phylogenetric
-Inferring age mixing patterns in HIV transmission from phylogenetic trees
+# Inferring age mixing patterns in HIV transmission from phylogenetic trees
+
+A simulation study to understand age mixing patterns in HIV transission networks inferred from phylogenetic trees. From the phylogenetic transmission clusters, we estimated a transmission network using phylogenetic linkage between pairs of sequences. We then inferred measurements that depict age-mixing patterns in transmission i.e. proportions of men/women of different age groups paired with women/men of another age group, and mean and standard deviation of an average age difference between women/men with their respective pairs. The uncertainty around these measurements was assessed as a function of sampling coverage in different sequence missingness scenarios was also assessed.
