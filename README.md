@@ -25,6 +25,7 @@ Three types of files (not including this readme file) are stored on this reposit
 All code is written in R. R is a statistical programming language and software package that is distributed under a GNU General Public License. R documentation and software is available for free download through the R Project for Statistical Computing website at http://www.r-project.org. The software is available as an executable file for a wide variety of operating systems and computer architectures, and a compilable binary is also available should you need it.
 
   sim_code -- contains R scripts to generate the data for age mixing patterns in HIV transmission networks
+  
   post_sim_code -- contains R markdown scripts to analyse and visualise the simulation outputs, and an R script to compare metrics in between different data missingness scenarios
 
 
