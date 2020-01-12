@@ -109,8 +109,6 @@ All files are copyright protected and are made available under the GPL 3.0 Licen
 
 ## CONTACT INFORMATION
 
-Please contact Prof Wim Delva with questions regarding the files provided and their authorized usage:
-
 David Niyukuri
 Email: <niyukuri@sun.ac.za>
 
