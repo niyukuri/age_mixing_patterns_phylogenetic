@@ -1,0 +1,11 @@
+"","parameter associated to age mixing","value","description"
+"1","formation.hazard.agegapry.baseline",2,"baseline value of age difference 
+                 between a man and woman in relationship"
+"2","person.agegap.man.dist.normal.mu",10,"mean of preferred age differences
+                 distribution for men"
+"3","person.agegap.woman.dist.normal.mu",10,"mean of preferred age differences
+                 distribution for women"
+"4","person.agegap.man.dist.normal.sigma",5,"standard deviation of preferred age
+                 differences distribution for men"
+"5","person.agegap.woman.dist.normal.sigma",5,"standard deviation of preferred age
+                 differences distribution for women"
