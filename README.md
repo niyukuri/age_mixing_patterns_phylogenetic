@@ -36,13 +36,13 @@ All code is written in R. R is a statistical programming language and software p
   
 ### Results files
 
-  MCAR -- age mixing results when we consider scenario of missing completly at random
+  MCAR -- results of age mixing pattenrs when we consider scenario of missing completly at random
   
-  MAR_a -- age mixing results when we consider scenario of missing at random with at most 70% of sample being women
+  MAR_a -- results of age mixing pattenrs when we consider scenario of missing at random with at most 70% of sample being women
   
-  MAR_b -- age mixing results when we consider scenario of missing at random with at most 30% of sample being women
+  MAR_b -- results of age mixing pattenrs when we consider scenario of missing at random with at most 30% of sample being women
   
-  MAR_c -- age mixing results when we consider scenario of missing at random with at most 50% of sample being women
+  MAR_c -- results of age mixing pattenrs when we consider scenario of missing at random with at most 50% of sample being women
   
   MCAR_MAR_comparison -- results of comparison of results between MCAR and MAR scenarios
 
