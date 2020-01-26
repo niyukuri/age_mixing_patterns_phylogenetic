@@ -8,7 +8,7 @@ A simulation study to understand age mixing patterns in HIV transission networks
 This repo contains the information necessary to reproduce the simulation study:
 
 * [Code and data files](#code-and-data-files)
-   * Code files for simulation and post-simulaiton analysis
+   * Code files for simulation and post-simulation analysis
    * Data files 
    * Results files
 * [System and software requirements](#system-and-software-requirements)
