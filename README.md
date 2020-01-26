@@ -24,27 +24,27 @@ Three types of files (not including this readme file) are stored on this reposit
 
 All code is written in R. R is a statistical programming language and software package that is distributed under a GNU General Public License. R documentation and software is available for free download through the R Project for Statistical Computing website at http://www.r-project.org. The software is available as an executable file for a wide variety of operating systems and computer architectures, and a compilable binary is also available should you need it.
 
-  sim_code -- contains R scripts to generate the data for age mixing patterns in HIV transmission networks
+  ***sim_code*** -- contains R scripts to generate the data for age mixing patterns in HIV transmission networks
   
-  post_sim_code -- contains R markdown scripts to analyse and visualise the simulation outputs, and an R script to compare metrics in between different data missingness scenarios
+  ***post_sim_code*** -- contains R markdown scripts to analyse and visualise the simulation outputs, and an R script to compare metrics in between different data missingness scenarios
 
 
 ### Data files
   
-  sim_outputs -- contains csv files one per each job submission at CHPC which contains statistics on age mixing patterns from records of the transmission networks and phylogenetic analysis.
+  ***sim_outputs*** -- contains csv files one per each job submission at CHPC which contains statistics on age mixing patterns from records of the transmission networks and phylogenetic analysis.
   
   
 ### Results files
 
-  MCAR -- results of age mixing pattenrs when we consider scenario of missing completly at random
+  ***MCAR*** -- results of age mixing pattenrs when we consider scenario of missing completly at random
   
-  MAR_a -- results of age mixing pattenrs when we consider scenario of missing at random with at most 70% of sample being women
+  ***MAR_a*** -- results of age mixing pattenrs when we consider scenario of missing at random with at most 70% of sample being women
   
-  MAR_b -- results of age mixing pattenrs when we consider scenario of missing at random with at most 30% of sample being women
+  ***MAR_b*** -- results of age mixing pattenrs when we consider scenario of missing at random with at most 30% of sample being women
   
-  MAR_c -- results of age mixing pattenrs when we consider scenario of missing at random with at most 50% of sample being women
+  ***MAR_c*** -- results of age mixing pattenrs when we consider scenario of missing at random with at most 50% of sample being women
   
-  MCAR_MAR_comparison -- results of comparison of results between MCAR and MAR scenarios
+  ***MCAR_MAR_comparison*** -- results of comparison of results between MCAR and MAR scenarios
 
   
 
@@ -57,11 +57,16 @@ All code is written in R. R is a statistical programming language and software p
 
 ### Required software
 
-  R version 3.4.4
+  **R version 3.4.4** <www.r-project.org> For statistical computing. To Install R, do the following:
   
-  In order for the phylo example to work, you need to add the executable tools "Seq-Gen", and "FastTree" to your working directory, as well as the root viral gene sequence (hiv.seq.B.pol.j.fasta).
+  1. Open an internet browser and go to www.r-project.org.
+  2.  Click the "download R" link in the middle of the page under "Getting Started."
+  3. Select a CRAN location (a mirror site) and click the corresponding link.
+  4. Click on the "Download R for ***your OS***" link at the top of the page.
+  
+  
 
-  Seq-Gen version 1.3.4. <https://github.com/rambaut/Seq-Gen/releases/tag/1.3.4> Simulates viral evolution across a transmission network and produces a sequence alignment. To install Seq-Gen, do the following:
+  **Seq-Gen version 1.3.4** <https://github.com/rambaut/Seq-Gen/releases/tag/1.3.4> Simulates viral evolution across a transmission network and produces a sequence alignment. To install Seq-Gen, do the following:
   
   1. Visit the following Github repository to download the latest version of Seq-Gen: <https://github.com/rambaut/Seq-Gen/releases/tag/1.3.4>
   2. Click on the "Source Code" zip file to download
@@ -72,8 +77,11 @@ All code is written in R. R is a statistical programming language and software p
   7. Once your working directory has been set to the source folder, type after the prompt: `make`
   8. Now open the source folder and verify that a new file is present called "seq-gen"
   9. Copy that file and paste it into your R working directory
+  
+  If installing on HPC facility, you may follow the instructions from 1 up to 5. And you will load the tool via the the PBS file, for example `module add /apps/chpc/scripts/modules/bio/app/Seq-Gen/1.3.4`.
+  
 
-  FastTree version 2.1.10. <http://www.microbesonline.org/fasttree/#Install> Reconstructs a phylogenetic tree from a large alignment dataset. To install FastTree, do the following:
+  **FastTree version 2.1.10** <http://www.microbesonline.org/fasttree/#Install> Reconstructs a phylogenetic tree from a large alignment dataset. To install FastTree, do the following:
   
   1. Visit the website for downloading instructions: <http://www.microbesonline.org/fasttree/#Install>
   2. If you have a Linux operating system, you can directly download the executable files that are linked on that website. Those downloaded files can then be placed in your R working directory
@@ -85,9 +93,22 @@ All code is written in R. R is a statistical programming language and software p
   8. Now check to see if a new executable file has been created in that folder
   9. Copy that file and paste it into your R working directory
 
-  SimpactCyan version 0.21 and RSimpactCyan. SimpactCyan is the core program that allows fast simulation of HIV transmission across a sexual network. RSimpactCyan is the R package that enables initiation and running of models built by SimpactCyan. Installation instructions for both are at: <https://github.com/j0r1/RSimpactCyan/blob/master/INSTALLATION.md>
+If installing on HPC facility, you may follow the instructions from 1 up to 7. And you will load the tool via the the PBS file, for example `module add /apps/chpc/scripts/modules/bio/app/FastTree/2.1.10`.
 
-  A long list of auxiliary R packages is required to run the post-simulation analysis for the MaxART and phylo examples in the paper.
+
+  **SimpactCyan version 0.21** and RSimpactCyan. SimpactCyan is the core program that allows fast simulation of HIV transmission across a sexual network. RSimpactCyan is the R package that enables initiation and running of models built by SimpactCyan. Installation instructions for both are at: <https://github.com/j0r1/RSimpactCyan/blob/master/INSTALLATION.md>
+
+
+  **ClusterPicker version 1.2.3** <http://hiv.bio.ed.ac.uk/software.html> Cluster Picker identifies clusters in newick-formatted phyogenetic trees containing thousands of sequences. Cut-offs for within cluster genetic distance and bootstrap support are selected by the user.
+
+  To use ClusterPicker, do the following:
+  
+  1. Install Java 1.6.0 or higherU
+  2. Visit the website for downloading instructions for ClusterPicker: <http://hiv.bio.ed.ac.uk/software.html>
+  3. Donwload the ClusterPicker command line version
+
+    
+  A long list of auxiliary R packages is required to run the post-simulation analysis for the simulation study.
 
   install.packages("devtools")
   
@@ -99,8 +120,16 @@ All code is written in R. R is a statistical programming language and software p
 
   install_github("wdelva/RSimpactHelp", dependencies = TRUE)
 
-  p_load(Rcpp, ape, expoTree, data.table, readr, phangorn, dplyr, adephylo, treedater, geiger, picante, igraph, network, intergraph, ggtree, lubridate, ggplot2, ggnetwork, metafolio, magrittr, dplyr, tidyr, geomnet, RSimpactCyan, RSimpactHelper)
- 
+  p_load(RSimpactCyan, RSimpactHelper, Rcpp, ape, expoTree, data.table, readr, phangorn, lme4, nlme, dplyr, adephylo, treedater, geiger, picante, igraph, phyloTop, phytools, Rsamtools, robustbase, intergraph, lubridate, tidyr)
+  
+
+To run the simulation on your desktop, you need to add the executable tools "Seq-Gen", and "FastTree", and "ClusterPicker" command line version to your working directory, as well as the root viral gene sequence (hiv.seq.C.pol.j.fasta). Run the the
+`wrapper.age.mix.R` file for simulations. That file sources other needed files: `age.mix.MCAR.MAR.comput.R`, `age.mixing.MAR.fun.R`, `age.mixing.MCAR.fun.R`, `advanced.transmission.network.builder.R`, `needed.functions.RSimpactHelp.R`.
+
+If you are running the simulation on HPC facility make sure you change the working directory accordingly, and ipload in your working directory also `ClusterPicker_1.2.3.jar` and execute the PBS file `run_large_AD_sacema.pbs`, you can rename is as you wnat and make sure also you modify the content according to your working environment on your HPC. 
+
+Note that you need to verify if the working directory is set in all R files for both simulation plateforms (desktop or HPC), and also in the pbs file if you are on HPC.
+
 
 ## COPYRIGHT AND LICENSING INFORMATION
 
