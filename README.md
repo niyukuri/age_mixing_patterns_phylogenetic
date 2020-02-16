@@ -53,7 +53,7 @@ All code is written in R. R is a statistical programming language and software p
 ### Operating system
 
 
-  We run the simulation study at the Cape Town Centre for High Performance Computing (CHPC) and tested it on personal computers (OS X Version 10.11.6 and Linux Ubuntu Version 16.04) and the golett cluster of the Flemish Supercomputer Centre (VSC).
+  We run the simulation study at the Cape Town Centre for High Performance Computing (CHPC) and tested it on personal computer (Linux Ubuntu Version 16.04).
 
 ### Required software
 
@@ -103,7 +103,7 @@ If installing on HPC facility, you may follow the instructions from 1 up to 7. A
 
   To use ClusterPicker, do the following:
   
-  1. Install Java 1.6.0 or higherU
+  1. Install Java 1.6.0 or higher
   2. Visit the website for downloading instructions for ClusterPicker: <http://hiv.bio.ed.ac.uk/software.html>
   3. Donwload the ClusterPicker command line version
 
