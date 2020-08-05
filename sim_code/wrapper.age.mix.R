@@ -74,10 +74,10 @@ inputmatrix <- matrix(rep(inputvector, reps), byrow = TRUE, nrow = reps)
 
 large.AD.age.mix <- simpact.parallel(model = wrapper.age.mix,
                                      actual.input.matrix = inputmatrix,
-                                     seed_count = 111777,
+                                     seed_count = 1,
                                      n_cluster = 56)
 
-write.csv(large.AD.age.mix, file = "F_results.mcarmar.large.AD_280_new_params_111777.csv")
+write.csv(large.AD.age.mix, file = "results.mcarmar.large.AD_280_seed_1.csv")
 
 
 
