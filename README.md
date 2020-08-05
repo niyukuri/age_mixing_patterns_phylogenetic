@@ -31,7 +31,7 @@ All code is written in R. R is a statistical programming language and software p
 
 ### Data files
   
-  ***sim_outputs*** -- contains csv files one per each job submission at CHPC which contains statistics on age mixing patterns from records of the transmission networks and phylogenetic analysis.
+  ***sim_outputs*** -- contains csv files one per each job submission at CHPC which contains simulation outputs of age mixing patterns from records of the transmission networks and phylogenetic analysis.
   
   
 ### Results files
@@ -53,7 +53,7 @@ All code is written in R. R is a statistical programming language and software p
 ### Operating system
 
 
-  We run the simulation study at the Cape Town Centre for High Performance Computing (CHPC) and tested it on personal computers (OS X Version 10.11.6 and Linux Ubuntu Version 16.04) and the golett cluster of the Flemish Supercomputer Centre (VSC).
+  We run the simulation study at the University of Cape Town Centre for High Performance Computing (CHPC) and tested it on personal computer (Linux Ubuntu Version 16.04).
 
 ### Required software
 
@@ -103,7 +103,7 @@ If installing on HPC facility, you may follow the instructions from 1 up to 7. A
 
   To use ClusterPicker, do the following:
   
-  1. Install Java 1.6.0 or higherU
+  1. Install Java 1.6.0 or higher
   2. Visit the website for downloading instructions for ClusterPicker: <http://hiv.bio.ed.ac.uk/software.html>
   3. Donwload the ClusterPicker command line version
 
@@ -123,12 +123,14 @@ If installing on HPC facility, you may follow the instructions from 1 up to 7. A
   p_load(RSimpactCyan, RSimpactHelper, Rcpp, ape, expoTree, data.table, readr, phangorn, lme4, nlme, dplyr, adephylo, treedater, geiger, picante, igraph, phyloTop, phytools, Rsamtools, robustbase, intergraph, lubridate, tidyr)
   
 
-To run the simulation on your desktop, you need to add the executable tools "Seq-Gen", and "FastTree", and "ClusterPicker" command line version to your working directory, as well as the root viral gene sequence (hiv.seq.C.pol.j.fasta). Run the the
-`wrapper.age.mix.R` file for simulations. That file sources other needed files: `age.mix.MCAR.MAR.comput.R`, `age.mixing.MAR.fun.R`, `age.mixing.MCAR.fun.R`, `advanced.transmission.network.builder.R`, `needed.functions.RSimpactHelp.R`.
+To run the simulation on your computer, you need to add the executable tools "Seq-Gen", and "FastTree", and "ClusterPicker" command line version to your working directory, as well as the root viral gene sequence (`hiv.seq.C.pol.j.fasta`). Run the the
+`wrapper.age.mix.R` file for simulations. That file sources other needed scripts: `age.mix.MCAR.MAR.comput.R`, `age.mixing.MAR.fun.R`, `age.mixing.MCAR.fun.R`, `advanced.transmission.network.builder.R`, `needed.functions.RSimpactHelp.R`.
 
 If you are running the simulation on HPC facility make sure you change the working directory accordingly, and ipload in your working directory also `ClusterPicker_1.2.3.jar` and execute the PBS file `run_large_AD_sacema.pbs`, you can rename is as you wnat and make sure also you modify the content according to your working environment on your HPC. 
 
-Note that you need to verify if the working directory is set in all R files for both simulation plateforms (desktop or HPC), and also in the pbs file if you are on HPC.
+**Note:** You need to verify if the working directory is well set in all R files for both simulation plateforms (personal computer or HPC), and also in the pbs file if you are on HPC.
+
+
 
 
 ## COPYRIGHT AND LICENSING INFORMATION
