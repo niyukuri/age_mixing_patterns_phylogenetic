@@ -159,8 +159,10 @@ age.mix.MCAR.MAR.comput <- function(inputvector=inputvector){
   # # + sampling == start ART
   # # when someone start ART, he/she is sampled and becomes non-infectious
   
-  cfg.list["monitoring.fraction.log_viralload"] <- 0
+  cfg.list["monitoring.fraction.log_viralload"] <- 0 # very important for transmission tree and sequence simulation
   
+  # Note: If treatment is started, the person’s set-point viral load value will be lowered according 
+  # to the setting in monitoring.fraction.log_viralload, if we set it to 0, it means the person is no more infectious
   
   #
   # ## Add-ons
@@ -168,7 +170,6 @@ age.mix.MCAR.MAR.comput <- function(inputvector=inputvector){
   ### BEGIN Add-on
   cfg.list["mortality.aids.survtime.C"] <- 65
   cfg.list["mortality.aids.survtime.k"] <- -0.2
-  cfg.list["monitoring.fraction.log_viralload"] <- 0 #0.3
   cfg.list["dropout.interval.dist.type"] <- "uniform"
   cfg.list["dropout.interval.dist.uniform.min"] <- 1000
   cfg.list["dropout.interval.dist.uniform.max"] <- 2000
@@ -181,64 +182,59 @@ age.mix.MCAR.MAR.comput <- function(inputvector=inputvector){
   #cfg.list["person.agegap.man.dist.fixed.value"] <- -6
   cfg.list["person.agegap.woman.dist.type"] <- "normal" #"fixed"
   #cfg.list["person.agegap.woman.dist.fixed.value"] <- -6
-  
-  cfg.list["mortality.aids.survtime.C"] <- 65
-  cfg.list["mortality.aids.survtime.k"] <- -0.2
-  cfg.list["monitoring.cd4.threshold"] <- 0 # 0 means nobody qualifies for ART
-  cfg.list["diagnosis.baseline"] <- -2
-  
+
   
   cfg.list["person.eagerness.man.dist.gamma.a"] <- 0.23 # 0.23
   cfg.list["person.eagerness.woman.dist.gamma.a"] <- 0.23 # 0.23
   cfg.list["person.eagerness.man.dist.gamma.b"] <- 45 # 45
   cfg.list["person.eagerness.woman.dist.gamma.b"] <- 45 # 45
   
+  
+  
+  cfg.list["monitoring.cd4.threshold"] <- 0 # 0 means nobody qualifies for ART
+  cfg.list["person.art.accept.threshold.dist.fixed.value"] <- 0.75
+  cfg.list["diagnosis.baseline"] <- -99999 # -2
+  
+  
   #### END Add-ons
   
   
   # # ART intervention
   # ###################
-  #
-  # # ART acceptability paramter and the ART  interventions
-  
-  cfg.list["person.art.accept.threshold.dist.fixed.value"] <- 0.6
+
   
   # Let's introduce ART, and evaluate whether the HIV prevalence drops less  rapidly
+
+  # Introducing ART
   art.intro <- list()
-  art.intro["time"] <- 20
-  art.intro["diagnosis.baseline"] <- -2 # 0#100
-  art.intro["monitoring.cd4.threshold"] <- 100 # 1200
+  art.intro["time"] <- 23    # ~2000
+  art.intro["diagnosis.baseline"] <- -2
+  art.intro["monitoring.cd4.threshold"] <- 100
   
-  ### add something about diagnosis
-  art.intro["diagnosis.agefactor"] <- 0
-  art.intro["diagnosis.genderfactor"] <- 0
-  art.intro["diagnosis.diagpartnersfactor"] <- 0
-  art.intro["diagnosis.isdiagnosedfactor"] <- 0
-  ### end of add-on about diagnosis
-  #art.intro["monitoring.interval.piecewise.cd4s"] <- "0,1300"
-  # Gradual increase in CD4 threshold. in 2007:200. in 2010:350. in 2013:500
   art.intro1 <- list()
-  art.intro1["time"] <- 22
-  art.intro1["diagnosis.baseline"] <- -2 # 0#100
-  art.intro1["monitoring.cd4.threshold"] <- 150 # 1200
+  art.intro1["time"] <- 25     # ~2002
+  art.intro1["diagnosis.baseline"] <- -1.8
+  art.intro1["monitoring.cd4.threshold"] <- 150
   
   art.intro2 <- list()
-  art.intro2["time"] <- 25 # inputvector[5] ######### 30
+  art.intro2["time"] <- 28     # ~2005
+  art.intro2["diagnosis.baseline"] <- -1.5
   art.intro2["monitoring.cd4.threshold"] <- 200
   
   art.intro3 <- list()
-  art.intro3["time"] <- 30 # inputvector[4] + inputvector[5] + inputvector[6] ########### 33
+  art.intro3["time"] <- 33     # ~2010
+  art.intro3["diagnosis.baseline"] <- -1
   art.intro3["monitoring.cd4.threshold"] <- 350
   
   art.intro4 <- list()
-  art.intro4["time"] <- 33 # inputvector[4] + inputvector[5] + inputvector[6] + inputvector[7] ########### 36
+  art.intro4["time"] <- 36     # ~2013
   art.intro4["monitoring.cd4.threshold"] <- 500
   
   art.intro5 <- list()
-  art.intro5["time"] <- 36
-  art.intro5["monitoring.cd4.threshold"] <- 700 # This is equivalent to immediate access
+  art.intro5["time"] <- 39     # ~2016
+  art.intro5["monitoring.cd4.threshold"] <- 700 # 
   
-  # tasp.indicator <- inputvector[9] # 1 if the scenario is TasP, 0 if the scenario is current status
+  
   interventionlist <- list(art.intro, art.intro1, art.intro2, art.intro3, art.intro4, art.intro5)
   
   intervention <- interventionlist
