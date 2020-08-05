@@ -1,6 +1,8 @@
 # 
 # # Statistical test: compairing missingness scenarios: MCAR & MAR
 
+# Go to Line 10575 and load the comparison table
+
 set.seed(777)
 
 suppressMessages(library(dplyr))
@@ -10566,11 +10568,11 @@ colnames(final_table) <- c("cov.35", "cov.40", "cov.45", "cov.50", "cov.55",
                            "cov.60", "cov.65", "cov.70", "cov.75", "cov.80",
                            "cov.85", "cov.90", "cov.95")
 
-saveRDS(final_table, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/final_table.RDS")
+saveRDS(final_table, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/compar_mcar_mar_table.RDS")
 
 
 
-final_table <- readRDS("/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/final_table.RDS")
+final_table <- readRDS("/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/compar_mcar_mar_table.RDS")
 
 
 # final_table %>%
@@ -10768,178 +10770,3 @@ ggsave(filename = "Plot_00_heatmapsSDagegap.pdf",
        path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison",
        width = 16, height = 10, units = "cm")
 
-# drafts
-
-# library(RColorBrewer)
-# 
-# heatmap(props_mar_a, col = terrain.colors(256))
-# 
-# heatmap(props_mar_a, col = cm.colors(256), Colv = NA, Rowv = NA)
-# 
-# 
-# levelplot(props_mar_a,
-#           row.values = seq_len(nrow(props_mar_a)),
-#           column.values = seq_len(ncol(props_mar_a)))
-# 
-# library(d3heatmap)
-# 
-# d3heatmap(props_mar_a)
-
-
-# d3heatmap(props_mar_a, dendrogram = 'none', 
-#           colors = c("#A8A8A8","#F9F200","#F40E00","#1FAE00"))
-
-
-# d3heatmap(props_mar_a, dendrogram = 'none')
-# 
-# 
-# 
-# library(ComplexHeatmap) # from Bioconductor  
-# library(circlize)
-# 
-# 
-# Heatmap(props_mar_a, 
-#         name = "P-values",
-#         show_heatmap_legend = TRUE,
-#         cluster_rows  =FALSE,
-#         cluster_columns = FALSE)
-
-
-# mcar_mar_a_prop.men15.25.F.15.25,
-# mcar_mar_a_prop.women15.25.M.15.25,
-# mcar_mar_a_prop.men25.40.F.15.25,
-# mcar_mar_a_prop.women15.25.M.25.40,
-# mcar_mar_a_prop.men25.40.F.25.40,
-# mcar_mar_a_prop.women25.40.M.25.40,
-# mcar_mar_a_prop.men40.50.F.15.25,
-# mcar_mar_a_prop.women15.25.M.40.50,
-# mcar_mar_a_prop.men40.50.F.25.40,
-# mcar_mar_a_prop.women25.40.M.40.50,
-# 
-# 
-# mcar_mar_b_prop.men15.25.F.15.25,
-# mcar_mar_b_prop.women15.25.M.15.25,
-# mcar_mar_b_prop.men25.40.F.15.25,
-# mcar_mar_b_prop.women15.25.M.25.40,
-# mcar_mar_b_prop.men25.40.F.25.40,
-# mcar_mar_b_prop.women25.40.M.25.40,
-# mcar_mar_b_prop.men40.50.F.15.25,
-# mcar_mar_b_prop.women15.25.M.40.50,
-# mcar_mar_b_prop.men40.50.F.25.40,
-# mcar_mar_b_prop.women25.40.M.40.50,
-# 
-# 
-# mcar_mar_c_prop.men15.25.F.15.25,
-# mcar_mar_c_prop.women15.25.M.15.25,
-# mcar_mar_c_prop.men25.40.F.15.25,
-# mcar_mar_c_prop.women15.25.M.25.40,
-# mcar_mar_c_prop.men25.40.F.25.40,
-# mcar_mar_c_prop.women25.40.M.25.40,
-# mcar_mar_c_prop.men40.50.F.15.25,
-# mcar_mar_c_prop.women15.25.M.40.50,
-# mcar_mar_c_prop.men40.50.F.25.40,
-# mcar_mar_c_prop.women25.40.M.40.50,
-# 
-# 
-# 
-# mcar_mar_a_mean.men.cl.15.25,
-# mcar_mar_a_mean.women.cl.15.25,
-# mcar_mar_a_mean.men.cl.25.40,
-# mcar_mar_a_mean.women.cl.15.25,
-# mcar_mar_a_mean.men.cl.40.50,
-# mcar_mar_a_mean.women.cl.40.50,
-# 
-# 
-# mcar_mar_a_med.men.cl.15.25,
-# mcar_mar_a_med.women.cl.15.25,
-# mcar_mar_a_med.men.cl.25.40,
-# mcar_mar_a_med.women.cl.15.25,
-# mcar_mar_a_med.men.cl.40.50,
-# mcar_mar_a_med.women.cl.40.50,
-# 
-# 
-# mcar_mar_a_sd.men.cl.15.25,
-# mcar_mar_a_sd.women.cl.15.25,
-# mcar_mar_a_sd.men.cl.25.40,
-# mcar_mar_a_sd.women.cl.15.25,
-# mcar_mar_a_sd.men.cl.40.50,
-# mcar_mar_a_sd.women.cl.40.50,
-# 
-# 
-# mcar_mar_b_mean.men.cl.15.25,
-# mcar_mar_b_mean.women.cl.15.25,
-# mcar_mar_b_mean.men.cl.25.40,
-# mcar_mar_b_mean.women.cl.15.25,
-# mcar_mar_b_mean.men.cl.40.50,
-# mcar_mar_b_mean.women.cl.40.50,
-# 
-# 
-# mcar_mar_b_med.men.cl.15.25,
-# mcar_mar_b_med.women.cl.15.25,
-# mcar_mar_b_med.men.cl.25.40,
-# mcar_mar_b_med.women.cl.15.25,
-# mcar_mar_b_med.men.cl.40.50,
-# mcar_mar_b_med.women.cl.40.50,
-# 
-# 
-# mcar_mar_b_sd.men.cl.15.25,
-# mcar_mar_b_sd.women.cl.15.25,
-# mcar_mar_b_sd.men.cl.25.40,
-# mcar_mar_b_sd.women.cl.15.25,
-# mcar_mar_b_sd.men.cl.40.50,
-# mcar_mar_b_sd.women.cl.40.50,
-# 
-# 
-# mcar_mar_c_mean.men.cl.15.25,
-# mcar_mar_c_mean.women.cl.15.25,
-# mcar_mar_c_mean.men.cl.25.40,
-# mcar_mar_c_mean.women.cl.15.25,
-# mcar_mar_c_mean.men.cl.40.50,
-# mcar_mar_c_mean.women.cl.40.50,
-# 
-# 
-# mcar_mar_c_med.men.cl.15.25,
-# mcar_mar_c_med.women.cl.15.25,
-# mcar_mar_c_med.men.cl.25.40,
-# mcar_mar_c_med.women.cl.15.25,
-# mcar_mar_c_med.men.cl.40.50,
-# mcar_mar_c_med.women.cl.40.50,
-# 
-# 
-# mcar_mar_c_sd.men.cl.15.25,
-# mcar_mar_c_sd.women.cl.15.25,
-# mcar_mar_c_sd.men.cl.25.40,
-# mcar_mar_c_sd.women.cl.15.25,
-# mcar_mar_c_sd.men.cl.40.50,
-# mcar_mar_c_sd.women.cl.40.50
-
-v_m <- dplyr::filter(v, v$f_m=="Males_Females")
-v_f <- dplyr::filter(v, v$f_m=="Females_Males")
-
-p1 <- ggplot(v_m, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
-  geom_line(size=1) +
-  geom_point() +
-  # facet_grid(. ~ f_m) + 
-  theme(legend.position="bottom")+
-  xlab("Sampling Coverage (%)") + ylab("Proportion")
-
-
-
-p2 <- ggplot(v_f, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
-  geom_line(size=1) +
-  geom_point() +
-  # facet_grid(. ~ f_m) + 
-  theme(legend.position="bottom")+
-  xlab("Sampling Coverage (%)") + ylab("Proportion")
-
-p <- grid.arrange(p1, p2, nrow = 1)
-
-
-ggsave("foo.pdf", arrangeGrob(p1, p2),
-       width = 30, height = 15, units = "cm")
-
-pdf("foo.pdf")
-grid.arrange(p1, p2, ncol=2)
-
-ggsave("foo.pdf", grid.arrange(p1, p2, ncol=2),
-       width = 40, height = 20, units = "cm")
