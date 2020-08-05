@@ -1,26 +1,50 @@
 # 
-# 
 # # Statistical test: compairing missingness scenarios: MCAR & MAR
-# 
+
+set.seed(777)
 
 suppressMessages(library(dplyr))
 
 
 ### Load data 
 
-dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD.csv")
+
+# dr1 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_1.csv")
+# dr2 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_285.csv")
+# dr3 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_570.csv")
+# dr4 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_855.csv")
+# dr5 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_1135.csv")
+# dr6 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_1420.csv")
+# dr7 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_1705.csv")
+# dr8 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_1990.csv")
+# dr9 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_2275.csv")
+# dr10 <- read.csv("/home/david/Dropbox/RedigerMaThese/Manuscript_1_age_mixing/results_april_2020/results.mcarmar.large.AD_280_seed_2560.csv")
+
+
+# 
+# dr <- rbind(dr1, dr2, dr3, dr4, dr5, dr6, dr7, dr8, dr9, dr10)
+
+# write.csv(dr, file = "/home/david/age_mixing_patterns_phylogenetic/sim_outputs/april_2020_results.mcarmar.large.AD.csv")
+# 
+# dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD.csv")
+
+
+dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/april_2020_results.mcarmar.large.AD.csv")
 
 
 
 # Wilcox function for one by one comaprison of vectors of median values of metric A and B
 # E.g.: proportions of women 15 - 24 phylogenetically linked to men between 40 - 49 in all sequence coverage 35 - 95%
 
+
 wilcox.test.A.B <- function(mcar=mcar, mar=mar) {
   
   d <- data.frame(mcar,mar)
   r <- na.omit(d)
-  
-  mcar_mar <- wilcox.test(d$mcar, d$mar, paired = TRUE)
+  di <- r$mcar - r$mar
+  xx <- r
+
+    mcar_mar <- wilcox.test(xx$mcar, xx$mar, paired = TRUE)
   
   V <- mcar_mar[1]$statistic[[1]]
   p_value <- mcar_mar[[3]]
@@ -30,6 +54,7 @@ wilcox.test.A.B <- function(mcar=mcar, mar=mar) {
   return(outputvector)
   
 }
+
 
 
 # I. Proportions of  pairings ---------
@@ -3790,7 +3815,7 @@ mcar_mar_a_cov.35_prop.men40.50.F.15.25 <- wilcox.test.A.B(mcar = vector.MCAR.co
 
 
 mcar_mar_a_cov.35_prop.women15.25.M.40.50 <- wilcox.test.A.B(mcar = vector.MCAR.cov.35.cl.prop.women15.25.M.40.50, 
-                                                           mar = vector.MAR.a.cov.35.cl.prop.women15.25.M.40.50)
+                                                             mar = vector.MAR.a.cov.35.cl.prop.women15.25.M.40.50)
 
 mcar_mar_a_cov.35_prop.men40.50.F.25.40 <- wilcox.test.A.B(mcar = vector.MCAR.cov.35.cl.prop.men40.50.F.25.40, 
                                                            mar = vector.MAR.a.cov.35.cl.prop.men40.50.F.25.40)
@@ -5545,7 +5570,7 @@ mcar_mar_a_cov.40_mean.men.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR.c
 
 
 mcar_mar_a_cov.40_mean.women.cl.25.40<- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.women.cl.25.40, 
-                                                         mar = vector.mean.MAR.a.cov.40.AD.women.cl.25.40)
+                                                        mar = vector.mean.MAR.a.cov.40.AD.women.cl.25.40)
 
 
 mcar_mar_a_cov.40_mean.men.cl.40.50<- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.men.cl.40.50, 
@@ -5697,7 +5722,6 @@ mcar_mar_a_cov.45_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 # 50 - a
-
 
 
 
@@ -6116,7 +6140,7 @@ mcar_mar_a_cov.70_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_cov.70_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.a.cov.70.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.a.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.70_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.women.cl.40.50, 
@@ -6286,7 +6310,7 @@ mcar_mar_a_cov.80_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_cov.80_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.a.cov.80.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.a.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.80_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.women.cl.40.50, 
@@ -6318,7 +6342,7 @@ mcar_mar_a_cov.85_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_a_cov.85_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.a.cov.85.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.a.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.85_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.women.cl.40.50, 
@@ -6345,7 +6369,7 @@ mcar_mar_a_cov.85_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_a_cov.85_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.a.cov.85.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.a.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.85_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.women.cl.40.50, 
@@ -6371,7 +6395,7 @@ mcar_mar_a_cov.85_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_cov.85_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.a.cov.85.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.a.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.85_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.women.cl.40.50, 
@@ -6403,7 +6427,7 @@ mcar_mar_a_cov.90_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_a_cov.90_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.a.cov.90.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.a.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.90_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.women.cl.40.50, 
@@ -6456,7 +6480,7 @@ mcar_mar_a_cov.90_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_cov.90_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.a.cov.90.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.a.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.90_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.women.cl.40.50, 
@@ -6488,7 +6512,7 @@ mcar_mar_a_cov.95_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_a_cov.95_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.a.cov.95.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.a.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.95_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.women.cl.40.50, 
@@ -6541,7 +6565,7 @@ mcar_mar_a_cov.95_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_cov.95_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.a.cov.95.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.a.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_a_cov.95_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.women.cl.40.50, 
@@ -6572,7 +6596,7 @@ mcar_mar_b_cov.35_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.35_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.35.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.35.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.35.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.35_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.35.AD.women.cl.40.50, 
@@ -6625,7 +6649,7 @@ mcar_mar_b_cov.35_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.35_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.35.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.35.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.35.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.35_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.35.AD.women.cl.40.50, 
@@ -6657,7 +6681,7 @@ mcar_mar_b_cov.40_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.40_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.40.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.40.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.40_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.women.cl.40.50, 
@@ -6770,7 +6794,7 @@ mcar_mar_b_cov.45_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.45_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.45.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.45.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.45.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.45_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.45.AD.women.cl.40.50, 
@@ -6796,7 +6820,7 @@ mcar_mar_b_cov.45_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.45_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.45.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.45.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.45.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.45_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.45.AD.women.cl.40.50, 
@@ -6829,7 +6853,7 @@ mcar_mar_b_cov.50_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.50_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.50.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.50.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.50_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.50.AD.women.cl.40.50, 
@@ -6856,7 +6880,7 @@ mcar_mar_b_cov.50_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.50_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.50.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.50.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.50_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.50.AD.women.cl.40.50, 
@@ -6882,7 +6906,7 @@ mcar_mar_b_cov.50_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.50_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.50.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.50.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.50_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.50.AD.women.cl.40.50, 
@@ -6941,7 +6965,7 @@ mcar_mar_b_cov.55_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.55_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.55.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.55.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.55.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.55_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.55.AD.women.cl.40.50, 
@@ -6967,7 +6991,7 @@ mcar_mar_b_cov.55_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.55_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.55.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.55.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.55.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.55_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.55.AD.women.cl.40.50, 
@@ -7000,7 +7024,7 @@ mcar_mar_b_cov.60_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.60_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.60.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.60.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.60_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.60.AD.women.cl.40.50, 
@@ -7027,7 +7051,7 @@ mcar_mar_b_cov.60_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.60_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.60.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.60.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.60_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.60.AD.women.cl.40.50, 
@@ -7053,7 +7077,7 @@ mcar_mar_b_cov.60_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.60_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.60.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.60.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.60_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.60.AD.women.cl.40.50, 
@@ -7085,7 +7109,7 @@ mcar_mar_b_cov.65_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.65_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.65.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.65.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.65.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.65_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.65.AD.women.cl.40.50, 
@@ -7171,7 +7195,7 @@ mcar_mar_b_cov.70_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.70_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.70.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.70.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.70_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.70.AD.women.cl.40.50, 
@@ -7198,7 +7222,7 @@ mcar_mar_b_cov.70_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.70_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.70.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.70.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.70_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.70.AD.women.cl.40.50, 
@@ -7224,7 +7248,7 @@ mcar_mar_b_cov.70_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.70_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.70.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.70_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.women.cl.40.50, 
@@ -7256,7 +7280,7 @@ mcar_mar_b_cov.75_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.75_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.75.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.75.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.75.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.75_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.75.AD.women.cl.40.50, 
@@ -7283,7 +7307,7 @@ mcar_mar_b_cov.75_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.75_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.75.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.75.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.75.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.75_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.75.AD.women.cl.40.50, 
@@ -7341,7 +7365,7 @@ mcar_mar_b_cov.80_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.80_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.80.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.80.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.80_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.80.AD.women.cl.40.50, 
@@ -7368,7 +7392,7 @@ mcar_mar_b_cov.80_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.80_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.80.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.80.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.80_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.80.AD.women.cl.40.50, 
@@ -7394,7 +7418,7 @@ mcar_mar_b_cov.80_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.80_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.80.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.80_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.women.cl.40.50, 
@@ -7426,7 +7450,7 @@ mcar_mar_b_cov.85_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.85_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.85.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.85_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.women.cl.40.50, 
@@ -7453,7 +7477,7 @@ mcar_mar_b_cov.85_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.85_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.85.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.85_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.women.cl.40.50, 
@@ -7479,7 +7503,7 @@ mcar_mar_b_cov.85_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.85_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.85.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.85_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.women.cl.40.50, 
@@ -7511,7 +7535,7 @@ mcar_mar_b_cov.90_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.90_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.90.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.90_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.women.cl.40.50, 
@@ -7538,7 +7562,7 @@ mcar_mar_b_cov.90_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_b_cov.90_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.90.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.b.cov.90.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.b.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.90_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.90.AD.women.cl.40.50, 
@@ -7564,7 +7588,7 @@ mcar_mar_b_cov.90_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.90_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.90.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.90_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.women.cl.40.50, 
@@ -7596,7 +7620,7 @@ mcar_mar_b_cov.95_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_b_cov.95_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.b.cov.95.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.b.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.95_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.women.cl.40.50, 
@@ -7649,7 +7673,7 @@ mcar_mar_b_cov.95_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_b_cov.95_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.b.cov.95.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.b.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_b_cov.95_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.women.cl.40.50, 
@@ -7680,7 +7704,7 @@ mcar_mar_c_cov.35_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.35_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.35.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.35.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.35.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.35_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.35.AD.women.cl.40.50, 
@@ -7707,7 +7731,7 @@ mcar_mar_c_cov.35_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.35_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.35.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.35.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.35.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.35_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.35.AD.women.cl.40.50, 
@@ -7733,7 +7757,7 @@ mcar_mar_c_cov.35_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.35_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.35.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.35.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.35.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.35_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.35.AD.women.cl.40.50, 
@@ -7765,7 +7789,7 @@ mcar_mar_c_cov.40_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.40_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.40.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.40.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.40_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.40.AD.women.cl.40.50, 
@@ -7792,7 +7816,7 @@ mcar_mar_c_cov.40_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.40_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.40.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.40.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.40.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.40_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.40.AD.women.cl.40.50, 
@@ -7818,7 +7842,7 @@ mcar_mar_c_cov.40_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.40_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.40.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.40.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.40.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.40_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.40.AD.women.cl.40.50, 
@@ -7851,7 +7875,7 @@ mcar_mar_c_cov.45_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.45_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.45.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.45.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.45.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.45_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.45.AD.women.cl.40.50, 
@@ -7878,7 +7902,7 @@ mcar_mar_c_cov.45_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.45_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.45.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.45.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.45.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.45_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.45.AD.women.cl.40.50, 
@@ -7904,7 +7928,7 @@ mcar_mar_c_cov.45_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.45_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.45.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.45.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.45.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.45_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.45.AD.women.cl.40.50, 
@@ -7937,7 +7961,7 @@ mcar_mar_c_cov.50_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.50_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.50.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.50.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.50_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.50.AD.women.cl.40.50, 
@@ -7964,7 +7988,7 @@ mcar_mar_c_cov.50_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.50_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.50.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.50.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.50_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.50.AD.women.cl.40.50, 
@@ -7990,7 +8014,7 @@ mcar_mar_c_cov.50_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.50_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.50.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.50.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.50.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.50_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.50.AD.women.cl.40.50, 
@@ -8022,7 +8046,7 @@ mcar_mar_c_cov.55_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.55_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.55.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.55.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.55.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.55_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.55.AD.women.cl.40.50, 
@@ -8049,7 +8073,7 @@ mcar_mar_c_cov.55_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.55_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.55.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.55.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.55.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.55_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.55.AD.women.cl.40.50, 
@@ -8075,7 +8099,7 @@ mcar_mar_c_cov.55_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.55_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.55.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.55.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.55.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.55_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.55.AD.women.cl.40.50, 
@@ -8108,7 +8132,7 @@ mcar_mar_c_cov.60_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.60_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.60.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.60.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.60_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.60.AD.women.cl.40.50, 
@@ -8135,7 +8159,7 @@ mcar_mar_c_cov.60_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.60_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.60.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.60.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.60_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.60.AD.women.cl.40.50, 
@@ -8161,7 +8185,7 @@ mcar_mar_c_cov.60_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.60_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.60.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.60.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.60.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.60_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.60.AD.women.cl.40.50, 
@@ -8193,7 +8217,7 @@ mcar_mar_c_cov.65_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.65_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.65.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.65.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.65.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.65_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.65.AD.women.cl.40.50, 
@@ -8220,7 +8244,7 @@ mcar_mar_c_cov.65_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.65_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.65.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.65.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.65.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.65_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.65.AD.women.cl.40.50, 
@@ -8246,7 +8270,7 @@ mcar_mar_c_cov.65_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.65_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.65.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.65.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.65.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.65_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.65.AD.women.cl.40.50, 
@@ -8279,7 +8303,7 @@ mcar_mar_c_cov.70_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.70_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.70.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.70.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.70_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.70.AD.women.cl.40.50, 
@@ -8306,7 +8330,7 @@ mcar_mar_c_cov.70_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.70_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.70.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.70.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.70_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.70.AD.women.cl.40.50, 
@@ -8332,7 +8356,7 @@ mcar_mar_c_cov.70_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.70_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.70.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.70.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.70_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.70.AD.women.cl.40.50, 
@@ -8364,7 +8388,7 @@ mcar_mar_c_cov.75_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.75_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.75.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.75.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.75.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.75_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.75.AD.women.cl.40.50, 
@@ -8391,7 +8415,7 @@ mcar_mar_c_cov.75_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.75_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.75.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.75.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.75.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.75_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.75.AD.women.cl.40.50, 
@@ -8417,7 +8441,7 @@ mcar_mar_c_cov.75_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.75_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.75.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.75.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.75.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.75_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.75.AD.women.cl.40.50, 
@@ -8449,7 +8473,7 @@ mcar_mar_c_cov.80_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.80_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.80.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.80.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.80_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.80.AD.women.cl.40.50, 
@@ -8476,7 +8500,7 @@ mcar_mar_c_cov.80_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.80_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.80.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.80.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.80_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.80.AD.women.cl.40.50, 
@@ -8502,7 +8526,7 @@ mcar_mar_c_cov.80_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.80_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.80.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.80.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.80_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.80.AD.women.cl.40.50, 
@@ -8534,7 +8558,7 @@ mcar_mar_c_cov.85_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.85_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.85.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.85_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.85.AD.women.cl.40.50, 
@@ -8561,7 +8585,7 @@ mcar_mar_c_cov.85_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.85_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.85.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.85_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.85.AD.women.cl.40.50, 
@@ -8587,7 +8611,7 @@ mcar_mar_c_cov.85_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.85_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.85.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.85.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.85_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.85.AD.women.cl.40.50, 
@@ -8619,7 +8643,7 @@ mcar_mar_c_cov.90_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.90_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.90.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.90_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.90.AD.women.cl.40.50, 
@@ -8646,7 +8670,7 @@ mcar_mar_c_cov.90_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.90_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.90.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.90.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.90_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.90.AD.women.cl.40.50, 
@@ -8672,7 +8696,7 @@ mcar_mar_c_cov.90_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.90_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.90.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.90.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.90_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.90.AD.women.cl.40.50, 
@@ -8704,7 +8728,7 @@ mcar_mar_c_cov.95_mean.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.mean.MCAR
 
 
 mcar_mar_c_cov.95_mean.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.men.cl.40.50, 
-                                                      mar = vector.mean.MAR.c.cov.95.AD.men.cl.40.50)
+                                                       mar = vector.mean.MAR.c.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.95_mean.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.mean.MCAR.cov.95.AD.women.cl.40.50, 
@@ -8731,7 +8755,7 @@ mcar_mar_c_cov.95_med.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.med.MCAR.c
 
 
 mcar_mar_c_cov.95_med.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.95.AD.men.cl.40.50, 
-                                                     mar = vector.med.MAR.c.cov.95.AD.men.cl.40.50)
+                                                      mar = vector.med.MAR.c.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.95_med.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.med.MCAR.cov.95.AD.women.cl.40.50, 
@@ -8757,7 +8781,7 @@ mcar_mar_c_cov.95_sd.women.cl.25.40 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_c_cov.95_sd.men.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.men.cl.40.50, 
-                                                    mar = vector.sd.MAR.c.cov.95.AD.men.cl.40.50)
+                                                     mar = vector.sd.MAR.c.cov.95.AD.men.cl.40.50)
 
 
 mcar_mar_c_cov.95_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov.95.AD.women.cl.40.50, 
@@ -8775,18 +8799,18 @@ mcar_mar_c_cov.95_sd.women.cl.40.50 <- wilcox.test.A.B(mcar = vector.sd.MCAR.cov
 
 
 mcar_mar_a_prop.men15.25.F.15.25 <- c(mcar_mar_a_cov.35_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.40_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.45_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.50_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.55_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.60_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.65_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.70_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.75_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.80_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.85_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.90_prop.men15.25.F.15.25,
-                                     mcar_mar_a_cov.95_prop.men15.25.F.15.25)
+                                      mcar_mar_a_cov.40_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.45_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.50_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.55_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.60_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.65_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.70_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.75_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.80_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.85_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.90_prop.men15.25.F.15.25,
+                                      mcar_mar_a_cov.95_prop.men15.25.F.15.25)
 
 
 
@@ -8931,18 +8955,18 @@ mcar_mar_a_prop.women25.40.M.40.50 <- c(mcar_mar_a_cov.35_prop.women25.40.M.40.5
 # MCAR - MAR - b proportions --------------
 
 mcar_mar_b_prop.men15.25.F.15.25 <- c(mcar_mar_b_cov.35_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.40_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.45_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.50_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.55_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.60_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.65_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.70_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.75_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.80_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.85_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.90_prop.men15.25.F.15.25,
-                                     mcar_mar_b_cov.95_prop.men15.25.F.15.25)
+                                      mcar_mar_b_cov.40_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.45_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.50_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.55_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.60_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.65_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.70_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.75_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.80_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.85_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.90_prop.men15.25.F.15.25,
+                                      mcar_mar_b_cov.95_prop.men15.25.F.15.25)
 
 
 
@@ -9089,18 +9113,18 @@ mcar_mar_b_prop.women25.40.M.40.50 <- c(mcar_mar_b_cov.35_prop.women25.40.M.40.5
 # MCAR - MAR - c proportions --------------
 
 mcar_mar_c_prop.men15.25.F.15.25 <- c(mcar_mar_c_cov.35_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.40_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.45_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.50_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.55_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.60_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.65_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.70_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.75_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.80_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.85_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.90_prop.men15.25.F.15.25,
-                                     mcar_mar_c_cov.95_prop.men15.25.F.15.25)
+                                      mcar_mar_c_cov.40_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.45_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.50_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.55_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.60_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.65_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.70_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.75_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.80_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.85_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.90_prop.men15.25.F.15.25,
+                                      mcar_mar_c_cov.95_prop.men15.25.F.15.25)
 
 
 
@@ -10426,121 +10450,128 @@ final_table <- matrix(c(
   mcar_mar_c_sd.men.cl.40.50,
   mcar_mar_c_sd.women.cl.40.50
 ),
-       ncol = 13,
-       byrow = TRUE)
+ncol = 13,
+byrow = TRUE)
 
 
 
 rownames(final_table) <- c(
   
-  "mcar_mar_a_prop.M.15.25.F.15.25",
-  "mcar_mar_a_prop.F.15.25.M.15.25",
-  "mcar_mar_a_prop.M.25.40.F.15.25",
-  "mcar_mar_a_prop.F.15.25.M.25.40",
-  "mcar_mar_a_prop.M.25.40.F.25.40",
-  "mcar_mar_a_prop.F.25.40.M.25.40",
-  "mcar_mar_a_prop.M.40.50.F.15.25",
-  "mcar_mar_a_prop.F.15.25.M.40.50",
-  "mcar_mar_a_prop.M.40.50.F.25.40",
-  "mcar_mar_a_prop.F.25.40.M.40.50",
-
-  "mcar_mar_b_prop.M.15.25.F.15.25",
-  "mcar_mar_b_prop.F.15.25.M.15.25",
-  "mcar_mar_b_prop.M.25.40.F.15.25",
-  "mcar_mar_b_prop.F.15.25.M.25.40",
-  "mcar_mar_b_prop.M.25.40.F.25.40",
-  "mcar_mar_b_prop.F.25.40.M.25.40",
-  "mcar_mar_b_prop.M.40.50.F.15.25",
-  "mcar_mar_b_prop.F.15.25.M.40.50",
-  "mcar_mar_b_prop.M.40.50.F.25.40",
-  "mcar_mar_b_prop.F.25.40.M.40.50",
-
-  "mcar_mar_c_prop.M.15.25.F.15.25",
-  "mcar_mar_c_prop.F.15.25.M.15.25",
-  "mcar_mar_c_prop.M.25.40.F.15.25",
-  "mcar_mar_c_prop.F.15.25.M.25.40",
-  "mcar_mar_c_prop.M.25.40.F.25.40",
-  "mcar_mar_c_prop.F.25.40.M.25.40",
-  "mcar_mar_c_prop.M.40.50.F.15.25",
-  "mcar_mar_c_prop.F.15.25.M.40.50",
-  "mcar_mar_c_prop.M.40.50.F.25.40",
-  "mcar_mar_c_prop.F.25.40.M.40.50",
-
-  "mcar_mar_a_mean.M.15.25",
-  "mcar_mar_a_mean.F.15.25",
-  "mcar_mar_a_mean.M.25.40",
-  "mcar_mar_a_mean.F.25.40",
-  "mcar_mar_a_mean.M.40.50",
-  "mcar_mar_a_mean.F.40.50",
+  "mcar_mar_a_prop.M.15.24.F.15.24",
+  "mcar_mar_a_prop.F.15.24.M.15.24",
+  "mcar_mar_a_prop.M.25.39.F.15.24",
+  "mcar_mar_a_prop.F.15.24.M.25.39",
+  "mcar_mar_a_prop.M.25.39.F.25.39",
+  "mcar_mar_a_prop.F.25.39.M.25.39",
+  "mcar_mar_a_prop.M.40.49.F.15.24",
+  "mcar_mar_a_prop.F.15.24.M.40.49",
+  "mcar_mar_a_prop.M.40.49.F.25.39",
+  "mcar_mar_a_prop.F.25.39.M.40.49",
+  
+  "mcar_mar_b_prop.M.15.24.F.15.24",
+  "mcar_mar_b_prop.F.15.24.M.15.24",
+  "mcar_mar_b_prop.M.25.39.F.15.24",
+  "mcar_mar_b_prop.F.15.24.M.25.39",
+  "mcar_mar_b_prop.M.25.39.F.25.39",
+  "mcar_mar_b_prop.F.25.39.M.25.39",
+  "mcar_mar_b_prop.M.40.49.F.15.24",
+  "mcar_mar_b_prop.F.15.24.M.40.49",
+  "mcar_mar_b_prop.M.40.49.F.25.39",
+  "mcar_mar_b_prop.F.25.39.M.40.49",
+  
+  "mcar_mar_c_prop.M.15.24.F.15.24",
+  "mcar_mar_c_prop.F.15.24.M.15.24",
+  "mcar_mar_c_prop.M.25.39.F.15.24",
+  "mcar_mar_c_prop.F.15.24.M.25.39",
+  "mcar_mar_c_prop.M.25.39.F.25.39",
+  "mcar_mar_c_prop.F.25.39.M.25.39",
+  "mcar_mar_c_prop.M.40.49.F.15.24",
+  "mcar_mar_c_prop.F.15.24.M.40.49",
+  "mcar_mar_c_prop.M.40.49.F.25.39",
+  "mcar_mar_c_prop.F.25.39.M.40.49",
+  
+  "mcar_mar_a_mean.M.15.24",
+  "mcar_mar_a_mean.F.15.24",
+  "mcar_mar_a_mean.M.25.39",
+  "mcar_mar_a_mean.F.25.39",
+  "mcar_mar_a_mean.M.40.49",
+  "mcar_mar_a_mean.F.40.49",
   
   
-  "mcar_mar_a_med.M.15.25",
-  "mcar_mar_a_med.F.15.25",
-  "mcar_mar_a_med.M.25.40",
-  "mcar_mar_a_med.F.25.40",
-  "mcar_mar_a_med.M.40.50",
-  "mcar_mar_a_med.F.40.50",
+  "mcar_mar_a_med.M.15.24",
+  "mcar_mar_a_med.F.15.24",
+  "mcar_mar_a_med.M.25.39",
+  "mcar_mar_a_med.F.25.39",
+  "mcar_mar_a_med.M.40.49",
+  "mcar_mar_a_med.F.40.49",
   
   
-  "mcar_mar_a_sd.M.15.25",
-  "mcar_mar_a_sd.F.15.25",
-  "mcar_mar_a_sd.M.25.40",
-  "mcar_mar_a_sd.F.25.40",
-  "mcar_mar_a_sd.M.40.50",
-  "mcar_mar_a_sd.F.40.50",
+  "mcar_mar_a_sd.M.15.24",
+  "mcar_mar_a_sd.F.15.24",
+  "mcar_mar_a_sd.M.25.39",
+  "mcar_mar_a_sd.F.25.39",
+  "mcar_mar_a_sd.M.40.49",
+  "mcar_mar_a_sd.F.40.49",
   
   
-  "mcar_mar_b_mean.M.15.25",
-  "mcar_mar_b_mean.F.15.25",
-  "mcar_mar_b_mean.M.25.40",
-  "mcar_mar_b_mean.F.25.40",
-  "mcar_mar_b_mean.M.40.50",
-  "mcar_mar_b_mean.F.40.50",
+  "mcar_mar_b_mean.M.15.24",
+  "mcar_mar_b_mean.F.15.24",
+  "mcar_mar_b_mean.M.25.39",
+  "mcar_mar_b_mean.F.25.39",
+  "mcar_mar_b_mean.M.40.49",
+  "mcar_mar_b_mean.F.40.49",
   
   
-  "mcar_mar_b_med.M.15.25",
-  "mcar_mar_b_med.F.15.25",
-  "mcar_mar_b_med.M.25.40",
-  "mcar_mar_b_med.F.25.40",
-  "mcar_mar_b_med.M.40.50",
-  "mcar_mar_b_med.F.40.50",
+  "mcar_mar_b_med.M.15.24",
+  "mcar_mar_b_med.F.15.24",
+  "mcar_mar_b_med.M.25.39",
+  "mcar_mar_b_med.F.25.39",
+  "mcar_mar_b_med.M.40.49",
+  "mcar_mar_b_med.F.40.49",
   
   
-  "mcar_mar_b_sd.M.15.25",
-  "mcar_mar_b_sd.F.15.25",
-  "mcar_mar_b_sd.M.25.40",
-  "mcar_mar_b_sd.F.25.40",
-  "mcar_mar_b_sd.M.40.50",
-  "mcar_mar_b_sd.F.40.50",
+  "mcar_mar_b_sd.M.15.24",
+  "mcar_mar_b_sd.F.15.24",
+  "mcar_mar_b_sd.M.25.39",
+  "mcar_mar_b_sd.F.25.39",
+  "mcar_mar_b_sd.M.40.49",
+  "mcar_mar_b_sd.F.40.49",
   
   
-  "mcar_mar_c_mean.M.15.25",
-  "mcar_mar_c_mean.F.15.25",
-  "mcar_mar_c_mean.M.25.40",
-  "mcar_mar_c_mean.F.25.40",
-  "mcar_mar_c_mean.M.40.50",
-  "mcar_mar_c_mean.F.40.50",
+  "mcar_mar_c_mean.M.15.24",
+  "mcar_mar_c_mean.F.15.24",
+  "mcar_mar_c_mean.M.25.39",
+  "mcar_mar_c_mean.F.25.39",
+  "mcar_mar_c_mean.M.40.49",
+  "mcar_mar_c_mean.F.40.49",
   
   
-  "mcar_mar_c_med.M.15.25",
-  "mcar_mar_c_med.F.15.25",
-  "mcar_mar_c_med.M.25.40",
-  "mcar_mar_c_med.F.25.40",
-  "mcar_mar_c_med.M.40.50",
-  "mcar_mar_c_med.F.40.50",
+  "mcar_mar_c_med.M.15.24",
+  "mcar_mar_c_med.F.15.24",
+  "mcar_mar_c_med.M.25.39",
+  "mcar_mar_c_med.F.25.39",
+  "mcar_mar_c_med.M.40.49",
+  "mcar_mar_c_med.F.40.49",
   
   
-  "mcar_mar_c_sd.M.15.25",
-  "mcar_mar_c_sd.F.15.25",
-  "mcar_mar_c_sd.M.25.40",
-  "mcar_mar_c_sd.F.25.40",
-  "mcar_mar_c_sd.M.40.50",
-  "mcar_mar_c_sd.F.40.50")
+  "mcar_mar_c_sd.M.15.24",
+  "mcar_mar_c_sd.F.15.24",
+  "mcar_mar_c_sd.M.25.39",
+  "mcar_mar_c_sd.F.25.39",
+  "mcar_mar_c_sd.M.40.49",
+  "mcar_mar_c_sd.F.40.49")
 
 
 colnames(final_table) <- c("cov.35", "cov.40", "cov.45", "cov.50", "cov.55",
                            "cov.60", "cov.65", "cov.70", "cov.75", "cov.80",
                            "cov.85", "cov.90", "cov.95")
+
+saveRDS(final_table, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/final_table.RDS")
+
+
+
+final_table <- readRDS("/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/final_table.RDS")
+
 
 # final_table %>%
 #   kable() %>%
@@ -10549,21 +10580,229 @@ colnames(final_table) <- c("cov.35", "cov.40", "cov.45", "cov.50", "cov.55",
 
 final_table_proportions <- final_table[1:30,]
 
-final_table_proportions <- round(final_table_proportions, digits = 3)
+# final_table_proportions <- round(final_table_proportions, digits = 3)
 
 
-write.csv(final_table_proportions, file = "/home/david/age_mixing_patterns_phylogenetic/results/mcar_mar_comparison/Table_comp_proportions_mcar_mar.csv")
-
-
+# write.csv(final_table_proportions, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/Table_comp_proportions_mcar_mar.csv")
+# 
+# 
+# final_table_proportions <- read.csv("/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/Table_comp_proportions_mcar_mar.csv")
+# 
 
 
 final_table_age_difference <- final_table[31:nrow(final_table),]
 
-final_table_age_difference <- round(final_table_age_difference, digits = 3)
+# final_table_age_difference <- round(final_table_age_difference, digits = 3)
 
 
 
-write.csv(final_table_age_difference, file = "/home/david/age_mixing_patterns_phylogenetic/results/mcar_mar_comparison/Table_comp_age_difference_mcar_mar.csv")
+# write.csv(final_table_age_difference, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/Table_comp_age_difference_mcar_mar.csv")
+# 
+
+# final_table_age_difference <- read.csv("/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison/Table_comp_age_difference_mcar_mar.csv")
+# 
+
+
+
+final_table_proportions <- as.data.frame(final_table_proportions)
+final_table_age_difference <- as.data.frame(final_table_age_difference)
+
+
+# props_mar_a <-  final_table_proportions %>%
+#   select(contains("mcar_mar_a_")) 
+
+
+# For proportions of pairings
+#############################
+
+props_mar_a <-  as.matrix(final_table_proportions[1:10,])
+y_1 <- rownames(props_mar_a)
+x_1 <- sub("mcar_mar_a_prop.", "", y_1)
+rownames(props_mar_a) <- x_1
+
+
+props_mar_b <-  as.matrix(final_table_proportions[11:20,])
+
+rownames(props_mar_b) <- x_1
+
+
+props_mar_c <-  as.matrix(final_table_proportions[21:30,])
+
+rownames(props_mar_c) <- x_1
+
+
+
+# For age difference
+####################
+
+ad_a <- as.matrix(final_table_age_difference[1:18,])
+
+ad_b <- as.matrix(final_table_age_difference[19:36,])
+
+ad_c <- as.matrix(final_table_age_difference[37:54,])
+
+
+mean_ad_a <- as.matrix(ad_a[1:6,])
+sd_ad_a <- as.matrix(ad_a[13:18,])
+
+y_2 <- rownames(mean_ad_a)
+x_2 <- sub("mcar_mar_a_mean.", "", y_2)
+rownames(mean_ad_a) <- x_2
+rownames(sd_ad_a) <- x_2
+
+
+mean_ad_b <- as.matrix(ad_b[1:6,])
+sd_ad_b <- as.matrix(ad_b[13:18,])
+
+rownames(mean_ad_b) <- x_2
+rownames(sd_ad_b) <- x_2
+
+
+mean_ad_c <- as.matrix(ad_c[1:6,])
+sd_ad_c <- as.matrix(ad_c[13:18,])
+
+rownames(mean_ad_c) <- x_2
+rownames(sd_ad_c) <- x_2
+
+
+
+# Plot heatmaps
+
+
+library(ComplexHeatmap) # from Bioconductor  
+library(circlize)
+
+
+heatmap_props_mar_a <- Heatmap(props_mar_a, 
+                               name = "P-values",
+                               show_heatmap_legend = TRUE,
+                               show_row_names = TRUE,
+                               cluster_rows = FALSE,
+                               cluster_columns = FALSE)
+
+heatmap_props_mar_b <- Heatmap(props_mar_b, 
+                               # name = "P-values",
+                               show_heatmap_legend = FALSE,
+                               show_row_names = FALSE,
+                               cluster_rows  =FALSE,
+                               cluster_columns = FALSE)
+
+heatmap_props_mar_c <- Heatmap(props_mar_c, 
+                               # name = "P-values",
+                               show_heatmap_legend = FALSE,
+                               show_row_names = FALSE,
+                               cluster_rows  =FALSE,
+                               cluster_columns = FALSE)
+
+
+heatmap_mean_mar_a <- Heatmap(mean_ad_a, 
+                              name = "P-values",
+                              show_heatmap_legend = TRUE,
+                              show_row_names = TRUE,
+                              cluster_rows  =FALSE,
+                              cluster_columns = FALSE)
+
+heatmap_mean_mar_b <- Heatmap(mean_ad_b, 
+                              # name = "P-values",
+                              show_heatmap_legend = FALSE,
+                              show_row_names = FALSE,
+                              cluster_rows  =FALSE,
+                              cluster_columns = FALSE)
+
+
+heatmap_mean_mar_c <- Heatmap(mean_ad_c, 
+                              # name = "P-values",
+                              show_heatmap_legend = FALSE,
+                              show_row_names = FALSE,
+                              cluster_rows  =FALSE,
+                              cluster_columns = FALSE)
+
+
+
+heatmap_sd_mar_a <- Heatmap(sd_ad_a, 
+                            name = "P-values",
+                            show_heatmap_legend = TRUE,
+                            show_row_names = TRUE,
+                            cluster_rows  =FALSE,
+                            cluster_columns = FALSE)
+
+heatmap_sd_mar_b <- Heatmap(sd_ad_b, 
+                            # name = "P-values",
+                            show_heatmap_legend = FALSE,
+                            show_row_names = FALSE,
+                            cluster_rows  =FALSE,
+                            cluster_columns = FALSE)
+
+heatmap_sd_mar_c <- Heatmap(sd_ad_c, 
+                            # name = "P-values",
+                            show_heatmap_legend = FALSE,
+                            show_row_names = FALSE,
+                            cluster_rows  =FALSE,
+                            cluster_columns = FALSE)
+
+
+# b - 30, c - 50, a - 70
+
+plot.heatmapsproportions <- heatmap_props_mar_b + heatmap_props_mar_c + heatmap_props_mar_a
+
+# 12 x 6 inches
+
+ggsave(filename = "Plot_00_heatmapsproportions.pdf",
+       plot = plot.heatmapsproportions,
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison",
+       width = 16, height = 10, units = "cm")
+
+
+plot.heatmapsmeanagegap <- heatmap_mean_mar_b + heatmap_mean_mar_c + heatmap_mean_mar_a
+
+ggsave(filename = "Plot_00_heatmapsmeanagegap.pdf",
+       plot = plot.heatmapsmeanagegap,
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison",
+       width = 16, height = 10, units = "cm")
+
+
+plot.heatmapsSDagegap <- heatmap_sd_mar_b + heatmap_sd_mar_c + heatmap_sd_mar_a
+
+ggsave(filename = "Plot_00_heatmapsSDagegap.pdf",
+       plot = plot.heatmapsSDagegap,
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR_MAR_comparison",
+       width = 16, height = 10, units = "cm")
+
+# drafts
+
+# library(RColorBrewer)
+# 
+# heatmap(props_mar_a, col = terrain.colors(256))
+# 
+# heatmap(props_mar_a, col = cm.colors(256), Colv = NA, Rowv = NA)
+# 
+# 
+# levelplot(props_mar_a,
+#           row.values = seq_len(nrow(props_mar_a)),
+#           column.values = seq_len(ncol(props_mar_a)))
+# 
+# library(d3heatmap)
+# 
+# d3heatmap(props_mar_a)
+
+
+# d3heatmap(props_mar_a, dendrogram = 'none', 
+#           colors = c("#A8A8A8","#F9F200","#F40E00","#1FAE00"))
+
+
+# d3heatmap(props_mar_a, dendrogram = 'none')
+# 
+# 
+# 
+# library(ComplexHeatmap) # from Bioconductor  
+# library(circlize)
+# 
+# 
+# Heatmap(props_mar_a, 
+#         name = "P-values",
+#         show_heatmap_legend = TRUE,
+#         cluster_rows  =FALSE,
+#         cluster_columns = FALSE)
 
 
 # mcar_mar_a_prop.men15.25.F.15.25,
@@ -10673,3 +10912,34 @@ write.csv(final_table_age_difference, file = "/home/david/age_mixing_patterns_ph
 # mcar_mar_c_sd.women.cl.15.25,
 # mcar_mar_c_sd.men.cl.40.50,
 # mcar_mar_c_sd.women.cl.40.50
+
+v_m <- dplyr::filter(v, v$f_m=="Males_Females")
+v_f <- dplyr::filter(v, v$f_m=="Females_Males")
+
+p1 <- ggplot(v_m, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+  geom_line(size=1) +
+  geom_point() +
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
+  xlab("Sampling Coverage (%)") + ylab("Proportion")
+
+
+
+p2 <- ggplot(v_f, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+  geom_line(size=1) +
+  geom_point() +
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
+  xlab("Sampling Coverage (%)") + ylab("Proportion")
+
+p <- grid.arrange(p1, p2, nrow = 1)
+
+
+ggsave("foo.pdf", arrangeGrob(p1, p2),
+       width = 30, height = 15, units = "cm")
+
+pdf("foo.pdf")
+grid.arrange(p1, p2, ncol=2)
+
+ggsave("foo.pdf", grid.arrange(p1, p2, ncol=2),
+       width = 40, height = 20, units = "cm")

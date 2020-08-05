@@ -1,5 +1,5 @@
 ---
-title: "Inferring age mixing from transmission clusters: Missing Completly at Random"
+title: "Inferring age mixing patterns from phylogenetic trees: Missing Completly at Random"
 author: "David Niyukuri"
 date: "`r format(Sys.time(), '%A %d %B %Y')`"
 output:
@@ -21,12 +21,12 @@ output:
 
 ```{r setup, include=FALSE}
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 
 ```
 
-Inferring age mixing from transmission clusters in a data missingess of Missing Completly at Random. This means during sampling, a missing  individual is considered to be missing randomly (without any explanation or cause).
+Inferring age mixing patterns from phylogenetic trees when missingess sequences are Missing Completly at Random scenario. 
 
 <!---
 
@@ -38,9 +38,13 @@ Load required packages for the analysis.
 
 ```{r packages}
 
+set.seed(777)
+
+
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
 suppressMessages(library(kableExtra))
+suppressMessages(library(gridExtra))
 
 ```
 <!---
@@ -53,10 +57,8 @@ Functions to summarise and to compute goodness of fit.
 
 ```{r functions}
 
-# Function to summarised outputs 
+# Summarise outputs 
 
-
-# library(gmodels) # no more use of ci()
 
 quant.med <- function(input){
   
@@ -88,8 +90,10 @@ min.max.sd.mean <- function(input){
 }
 
 
-# Function for Average Root Mean Squared Error
-ARMSE <- function(v1=v1, v2=v2) {
+
+# Functions for goodness of fit
+
+ARMSE <- function(v1=v1, v2=v2) { # v1 = y_i and v2= x_i
   d <- data.frame(v1,v2)
   r <- na.omit(d)
   y1 <- r[,1]
@@ -100,57 +104,40 @@ ARMSE <- function(v1=v1, v2=v2) {
 
 
 
-# Function for Root Mean Squared Error
-RMSE <- function(error) {
+RMSE <- function(error) { # vector y_i - x_i
   error <- as.numeric(na.omit(error))
   rmse <- sqrt(mean(error^2)) 
   return(rmse)}
 
-# Function for Mean Absolute Error
-MAE <- function(error) { 
+
+MAE <- function(error) { # vector y_i - x_i
   error <- as.numeric(na.omit(error))
   mae <- mean(abs(error)) 
   return(mae)
 }
 
 
-# Function for Mean Realative Error
-MRE <- function(error) { 
+
+MRE <- function(error) {  # vector y_i - x_i
   error <- as.numeric(na.omit(error))
   mae <- mean(error) 
   return(mae)
 }
 
-# set_names(c("Centre", "Conforme", "Ne conforme pas", "Total admis", "% conforme")) %>% 
-#                  flextable::flextable() %>% 
-#                  flextable::autofit()
+
+
+
 
 ```
 
-<!---
 
-# Read the data
-
-Read the simulation outputs.
-
---->
 
 ```{r read_data}
 
 
-# dr2 <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD_280_new_params_111.csv")
-# dr3 <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD_280_new_params_444.csv")
-# dr4 <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD_280_new_params_888.csv")
-# dr1 <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD_280_new_params_111777.csv")
+# dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD.csv")
 
-# dr <- rbind(dr1, dr2, dr3, dr4)
-
-
-# write.csv(dr, file = "/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD.csv")
-
-
-dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_results.mcarmar.large.AD.csv")
-
+dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/april_2020_results.mcarmar.large.AD.csv")
 
 
 ```
@@ -158,7 +145,7 @@ dr <- read.csv("/home/david/age_mixing_patterns_phylogenetic/sim_outputs/F_resul
 
 # Epidemic characteristics
 
-An HIV epidemic was simulated in an age and gender structured population. With an initial population of 10000 men and 10000 women, the simulation time was 40 years, and the infection was introduced in the population at the 10th year among randomly selected 10 individuals within 20 and 50 of age range. During simulation, demographic events like birth, and death were considered together with sexual partnerships. Refering to real world history of HIV, mainly ART treatment, we gradually allow interventions based on CD4 counts. With a seed sequence sampled in 1989, we assume it existed two years before (1987). It means that the simulation of started in 1977, and the infection was introduced in 1987 for 30 years in 2017. With same parameter combination, we performed 1120 simulations, and the statistics presented below will be minimum, median, mean, and maximum values of all 1120 simulations. 
+An HIV epidemic was simulated in an age and gender structured population. With an initial population of 10000 men and 10000 women, the simulation time was 40 years, and the infection was introduced in the population at the 10th year among randomly selected 10 individuals within 20 and 50 of age range. During simulation, demographic events like birth, and death were considered together with sexual partnerships. Refering to real world history of HIV, mainly ART treatment, we gradually allow interventions based on CD4 counts. On calendar time the simulation started in 1977, and the infection was introduced in 1987 for 30 years in 2017. With same parameter combination, we performed 2800 simulations, and the statistics presented below will be minimum, median, mean, and maximum values of all 2800 simulations. 
 
 
 ```{r params}
@@ -202,7 +189,6 @@ write.csv(params.setup, file = "/home/david/age_mixing_patterns_phylogenetic/res
 
 ```
 
-If we consider time point sampling at 40 simulation time, we can see that the epidemic is characterized by an increasing prevalence across early age groups in both men and women, with women carrying the most of the burden. After 40 years the trend reversed with a high prevalence among men and the lowest among women. The simulated epidemic looks like a typical sub-Saharan Africa epidemic.
 
 
 ## Prevalence
@@ -288,8 +274,7 @@ ggsave(filename = "Plot_1_Prevalence.pdf",
 
 ## Incidence
 
-
-The age mixing in partnership and transmission will be studied within a time interval of 35 - 40 years of running time. The incidence among three age groups per gender is shown by the following figure. We can see that younger women had a lot of new cases compared to men in same age group, but men within 25 - 39, and 40 - 49 have much cases compared to women of same age groups. 
+Incidence within a time interval of 35 - 40 years of running time. 
 
 
 ```{r HIV_incidence}
@@ -394,7 +379,7 @@ write.csv(prev.conc.p.val, file = "/home/david/age_mixing_patterns_phylogenetic/
 ### Age mixing in partnership
 
 
-Age mixing patterns is defined as population-level patterns for how people choose partners with regards to age. If we consider past 5 years from simulation time 40, we have the following statistics of age mixing patterns in partnership.
+Age mixing patterns is defined as population-level patterns for how people choose partners with regards to age. If we consider past 5 years backward from simulation time 40, we have the following statistics of age mixing patterns in partnership.
 
 
 #### True population level age mixing patterns in overall partnerships
@@ -411,7 +396,7 @@ In the fllowing analysis we depict popultion level age mixing patterns by comput
 
 The following age mixing characteristics are computed for the entire population in partnership between 35 and 40 simulation time. 
 
-Note that we took the age of a man and substract the age of his partner (woman), hence we have suffix ".male" on these measurements.
+Note that we took the age of a man and substract the age of his partner (woman), hence we have suffix ".male" on these parameters
 
 
 ```{r age_mix_rels}
@@ -451,10 +436,6 @@ write.csv(age.mixing.pop, file = "/home/david/age_mixing_patterns_phylogenetic/r
 
 
 ```
-
-
-The results in the table above show that the median values of the average age difference (AAD) between men and women is around 14 years at population level which is almost 4 years far from mean of preferred age differences distribution for men and women. Its standard deviation (SDAD) is slightly more than 6 years, which is 1 year far from the value of standard deviation of preferred age differences distribution for men and women. We can see that the statistics of simulation study set up are reflecting here. [** is it correct, the assumption is that AAD ~ mu + sigma**]
-
 
 
 #### **True** age mixing patterns in different sequence coverage scenarios  of partnerships of infected and sampled invdividuals - MCAR
@@ -686,7 +667,7 @@ age.mix.stats <- matrix(c(T.35.AAD.male[2], T.40.AAD.male[2],
 ncol = 14,
 byrow = TRUE)
 
-age.mix.stats <- round(age.mix.stats, digits = 2)
+age.mix.stats <- round(age.mix.stats, digits = 3)
 
 colnames(age.mix.stats) <- c("cov.35", "cov.40", "cov.45",
                              "cov.50", "cov.55", "cov.60",
@@ -707,11 +688,6 @@ write.csv(age.mix.stats, file = "/home/david/age_mixing_patterns_phylogenetic/re
 
 
 ```
-
-
-The median value of AAD is one year apart from the true value at 100% sampling coverage (13.97), the SDAD still in same range (aroung 6) as at 100% sampling coverage.  
-
-Note that the increase in sampling (sequence) coverage does not have an obvious effect on statistics of age mixing patetrns of partnership of  infected individuals. There is no statistics from low coverage which can be greater in magnitude than true values at 100% sampling coverage except for SDAD (values of SDAD at low sampling coverage can be greater compared to 100% sampling coverage). 
 
 
 
@@ -816,11 +792,6 @@ ggsave(filename = "Plot_3_error_age_mixing.pdf",
 ```
 
 
-The error for WSD.male is around 0.05 and SDAD.male being below zero at almost 0.05 in absolute value, AAD.male turns around 0.1, BSD.male and slope.male varies between 0.3 and 0.4 (at highest sampling coverage the slope being on top), and the intercept.male turns aroung 0.5. All the variations of these measurements across different sequence scenarios show no variation with the increase of sampling coverage. 
-
-Overall, in terms of error magnitude we can classify from the lowest to the highest: SDAD.male, WSD.male, AAD.male, BSD.male, slope.male, and intercept.male. And we can conclude that sampling coverage does not affect results.
-
-
 
 # Computing transmission clusters
 
@@ -831,7 +802,7 @@ HIV transmission clusters were identified in the phylogenetic trees based on hig
 
 ## Statistics of size of transmission clusters
 
-Per each simulation for the existing 1120, we computed transmission cluster size statistics: mean, median, and standard deviation to have an idea on their size distribution. Here below, we present the median values of these statistics for overall 1120 simulations in different sampling coverage.
+Per each simulation for the existing 2800, we computed transmission cluster size statistics: mean, median, and standard deviation to have an idea on their size distribution. Here below, we present the median values of these statistics for overall 2800 simulations in different sampling coverage.
 
 
 ```{r size_transm_clusters_stats}
@@ -1254,7 +1225,7 @@ ggsave(filename = "Plot_7_Clusters_Size_Stats.pdf",
 
 We computed plausible pairings between men and women from the transmission clusters. In other words, we estimated plausible transmission network from a phylogenetictree. To build that plausible transmission network from the phylogenetic tree, we computed first the time to the most recent ancestor matrix (tMRCA), which is a contigency matrix. Thereafter, we filtered this matrix by gender, transmission cluster IDs, and a threshold value of tMRCA (7 years). This means that we have a pairing between individuals $x_i$ and $x_j$ if they are within same transmission cluster, have different gender, and their tMRCA does not exceed 7 years.
 
-Since the simlation was performed 1120 times, the number of pairings presented in the tables below are median values.
+Since the simlation was performed 2800 times, the number of pairings presented in the tables below are median values.
 
 We have in the following sections: **true** pairings which are computed from the transmission network from partnership and transmission records, and pairings estimated from phylogenetic tree.
 
@@ -2077,7 +2048,7 @@ write.csv(pairing_clust_inf_scenarios, file = "/home/david/age_mixing_patterns_p
 
 # Proportions of pairings across age groups
 
-With transmission clusters and pairings we can be able to compute the proportions of men/women from a given age group who are in within any transmission cluster. This means, for example if we have a transmission cluster with **M** men and **W** women for example, knowing also their age, we can place these men and women in the age groups (< 25 year, 25 - 40 years, and 40 - 50 years), and thereafter compute their proportions: number of men in a given age group who are in pair with women in another given age group.
+With transmission clusters and pairings we can be able to compute the proportions of men/women from a given age group who are in within any transmission cluster. This means, for example if we have a transmission cluster with **M** men and **F** women for example, knowing also their age, we can place these men and women in the age groups (< 25 year, 25 - 40 years, and 40 - 50 years), and thereafter compute their proportions: number of men in a given age group who are phylogenetically linked to women in another age group.
 
 
 
@@ -2192,11 +2163,11 @@ props.val.L <- c(d.MCAR.true.cov.100.prop.men15.25.F.15.25[1], d.MCAR.true.cov.1
                  d.MCAR.true.cov.100.prop.men25.40.F.40.50[1], d.MCAR.true.cov.100.prop.women25.40.M.40.50[1],
                  d.MCAR.true.cov.100.prop.men40.50.F.40.50[1], d.MCAR.true.cov.100.prop.women40.50.M.40.50[1])
 
-names.props <- c("M.15.25.F.15.25", "F.15.25.M.15.25", "M.25.40.F.15.25", "F.25.40.M.15.25",
-                 "M.40.50.F.15.25", "F.40.50.M.15.25", "M.15.25.F.25.40", "F.15.25.M.25.40",
-                 "M.25.40.F.25.40", "F.25.40.M.25.40", "M.40.50.F.25.40", "F.40.50.M.25.40",
-                 "M.15.25.F.40.50", "F.15.25.M.40.50", "M.25.40.F.40.50", "F.25.40.M.40.50",
-                 "M.40.50.F.40.50", "F.40.50.M.40.50")
+names.props <- c("M.15.24.F.15.24", "F.15.24.M.15.24", "M.25.39.F.15.24", "F.25.39.M.15.24",
+                 "M.40.49.F.15.24", "F.40.49.M.15.24", "M.15.24.F.25.39", "F.15.24.M.25.39",
+                 "M.25.39.F.25.39", "F.25.39.M.25.39", "M.40.49.F.25.39", "F.40.49.M.25.39",
+                 "M.15.24.F.40.49", "F.15.24.M.40.49", "M.25.39.F.40.49", "F.25.39.M.40.49",
+                 "M.40.49.F.40.49", "F.40.49.M.40.49")
 
 
 prop_pairings_100 <- data.frame(names.props, props.val.L, props.val.F, props.val.U)
@@ -2230,19 +2201,61 @@ rownames(d) <- d$name
 d <- d[order(row.names(d)), ]
 d_f <- d
 
-d_f$age_groups <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
+# d_f$age_groups <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
 
-x <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
+d_f$age_groups <- c("F.15.24.M.15.24", "F.15.24.M.25.39", "F.15.24.M.40.49", "F.25.39.M.25.39", "F.25.39.M.40.49", # females_males
+                 "M.15.24.F.15.24", "M.25.39.F.15.24", "M.25.39.F.25.39", "M.40.49.F.15.24", "M.40.49.F.25.39") # males_females
+
+
+# x <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
+
+x <- c("F.15.24.M.15.24", "F.15.24.M.25.39", "F.15.24.M.40.49", "F.25.39.M.25.39", "F.25.39.M.40.49", # females_males
+                 "M.15.24.F.15.24", "M.25.39.F.15.24", "M.25.39.F.25.39", "M.40.49.F.15.24", "M.40.49.F.25.39") # males_females
+
 
 d_f$x <- x
 d_f$f_m <- c(rep("Females_Males", 5), rep("Males_Females", 5))
-plots.prop_pairings_100_target  <- ggplot(d_f, aes(x=x, y=med, colour=age_groups)) + 
+
+
+d_m <- dplyr::filter(d_f, d_f$f_m=="Males_Females")
+d_f <- dplyr::filter(d_f, d_f$f_m=="Females_Males")
+
+p1 <- ggplot(d_f, aes(x=x, y=med, colour=age_groups)) + 
   geom_errorbar(aes(ymin=lower.Q1, ymax=upper.Q3), width=.5) +
   geom_line(size=.5) +
   geom_point(size=1) + 
-  facet_grid(.~f_m)+
-  theme(legend.position="top")+
+  facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
   xlab("Age Groups for proportions of pairings") + ylab("Proportion") 
+
+
+
+p2 <- ggplot(d_m,aes(x=x, y=med, colour=age_groups)) + 
+  geom_errorbar(aes(ymin=lower.Q1, ymax=upper.Q3), width=.5) +
+  geom_line(size=.5) +
+  geom_point(size=1) + 
+  facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
+  xlab("Age Groups for proportions of pairings") + ylab("Proportion") 
+
+
+# grid.arrange(p1, p2, ncol=2)
+
+
+ggsave(filename = "Plot_8_True_Proportion_of_Pairings_at_100_Coverage.pdf",
+       grid.arrange(p1, p2, ncol=2),
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
+       width = 40, height = 20, units = "cm")
+
+
+
+# plots.prop_pairings_100_target  <- ggplot(d_f, aes(x=x, y=med, colour=age_groups)) + 
+#   geom_errorbar(aes(ymin=lower.Q1, ymax=upper.Q3), width=.5) +
+#   geom_line(size=.5) +
+#   geom_point(size=1) + 
+#   facet_grid(.~f_m)+
+#   theme(legend.position="top")+
+#   xlab("Age Groups for proportions of pairings") + ylab("Proportion") 
 
 # OR
 
@@ -2254,13 +2267,6 @@ plots.prop_pairings_100_target  <- ggplot(d_f, aes(x=x, y=med, colour=age_groups
 #   theme(legend.position="top")+
 #   xlab("Age Groups for proportions of pairings") + ylab("Proportion") 
 
-
-print(plots.prop_pairings_100_target)
-
-ggsave(filename = "Plot_8_True_Proportion_of_Pairings_at_100_Coverage.pdf",
-       plot = plots.prop_pairings_100_target,
-       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
-       width = 26, height = 15, units = "cm")
 
 
 ```
@@ -3614,7 +3620,13 @@ d <- as.data.frame(prop_pairings_seq_cov_target)
 d <- d[order(row.names(d)), ]
 d_f <- d
 d_f$pairs <- c(rep("Females_Males", nrow(d)/2), rep("Males_Females", nrow(d)/2))
-d_f$age_grp <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
+
+# d_f$age_grp <- c(rep(c("15_24 & 15_24", "15_24 & 25_39", "15_24 & 40_49", "25_39 & 25_39", "25_39 & 40_49"), 2))
+
+
+d_f$age_grp <- c("F.15.24.M.15.24", "F.15.24.M.25.39", "F.15.24.M.40.49", "F.25.39.M.25.39", "F.25.39.M.40.49", # females_males
+                 "M.15.24.F.15.24", "M.25.39.F.15.24", "M.25.39.F.25.39", "M.40.49.F.15.24", "M.40.49.F.25.39") # males_females
+
 
 
 for(i in 1:length(rownames(d_f))){
@@ -3635,19 +3647,31 @@ for(i in 1:length(rownames(d_f))){
 
 saveRDS(v, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR/MCAR_9_Proportion_of_Pairings_at_35_95_Coverage.RDS")
 
-plot.prop_pairings_seq_cov_target_v <- ggplot(v, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+
+v_m <- dplyr::filter(v, v$f_m=="Males_Females")
+v_f <- dplyr::filter(v, v$f_m=="Females_Males")
+
+p1 <- ggplot(v_f, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
   geom_line(size=1) +
   geom_point() +
-  facet_grid(. ~ f_m) + 
-  # theme(legend.position="top")+
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
   xlab("Sampling Coverage (%)") + ylab("Proportion")
 
-print(plot.prop_pairings_seq_cov_target_v)
+
+
+p2 <- ggplot(v_m, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+  geom_line(size=1) +
+  geom_point() +
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
+  xlab("Sampling Coverage (%)") + ylab("Proportion")
+
 
 ggsave(filename = "Plot_9_Proportion_of_Pairings_at_35_95_Coverage.pdf",
-       plot = plot.prop_pairings_seq_cov_target_v,
+       grid.arrange(p1, p2, ncol=2),
        path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
-       width = 30, height = 15, units = "cm")
+       width = 40, height = 20, units = "cm")
 
 
 
@@ -6049,8 +6073,25 @@ newdata <- d[order(d$param),]
 
 newdata$f_m <- c(rep("Females_Males", nrow(newdata)/2), rep("Males_Females", nrow(newdata)/2))
 
-newdata$age_groups <- c(rep("15_24 & 15_24", 13), rep("15_24 & 25_39", 13), rep("15_24 & 40_49", 13), rep("25_39 & 25_39", 13), rep("25_39 & 40_49", 13),
-                        rep("15_24 & 15_24", 13), rep("15_24 & 25_39", 13), rep("25_39 & 25_39", 13), rep("15_24 & 40_49", 13), rep("25_39 & 40_49", 13))
+names_age_groups <- c("F.15.24.M.15.24", "F.15.24.M.25.39", "F.15.24.M.40.49", "F.25.39.M.25.39", "F.25.39.M.40.49", # females_males
+                 "M.15.24.F.15.24", "M.25.39.F.15.24", "M.25.39.F.25.39", "M.40.49.F.15.24", "M.40.49.F.25.39") # males_females
+
+names_age_groups_x <- c("F.15.25.M.15.25", "F.15.25.M.25.40", "F.15.25.M.40.50", "F.25.40.M.25.40", "F.25.40.M.40.50", # females_males
+                 "M.15.25.F.15.25", "M.25.40.F.15.25", "M.25.40.F.25.40", "M.40.50.F.15.25", "M.40.50.F.25.40") # males_females
+
+age_group_all <- vector()
+
+for(i in 1:nrow(newdata)){
+  age_group_i <- newdata$param[i] 
+  for(j in 1:length(names_age_groups_x)){
+    if(age_group_i==names_age_groups_x[j]){
+      age_group_all <- c(age_group_all, names_age_groups[j])
+    }
+  }
+}
+
+
+newdata$age_groups <- age_group_all
 
 colnames(newdata) <- c("cov", "val", "param", "f_m", "age_groups")
 
@@ -6058,27 +6099,51 @@ colnames(newdata) <- c("cov", "val", "param", "f_m", "age_groups")
 saveRDS(newdata, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR/MCAR_10_Error_for_Proportions_of_Pairings.RDS")
 
 
-plot.prop_pairings_seq_cov_errors_100 <- ggplot(newdata, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+newdata_f <- dplyr::filter(newdata, newdata$f_m=="Females_Males")
+
+newdata_m <- dplyr::filter(newdata, newdata$f_m=="Males_Females")
+
+
+p11 <- ggplot(newdata_f, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
   geom_line(size=1) +
   geom_point() +
   facet_grid(. ~ f_m) + 
-  # theme(legend.position="top")+
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
   xlab("Sampling Coverage (%)") + ylab("Error value for proportion of pairings")
+  
+  
+p22 <- ggplot(newdata_m, aes(x=cov, y=val, colour= age_groups, group = age_groups)) + 
+  geom_line(size=1) +
+  geom_point() +
+  facet_grid(. ~ f_m) + 
+  # facet_grid(. ~ f_m) + 
+  theme(legend.position="bottom")+
+  xlab("Sampling Coverage (%)") + ylab("Error value for proportion of pairings")
+  
 
-print(plot.prop_pairings_seq_cov_errors_100)
+# pdf("/home/david/age_mixing_patterns_phylogenetic/results/MCAR/Plot_9_10_proportion_pairings_and_error_at_35_95_Coverage.pdf",
+#     width=15, height=15)
+# gridExtra::grid.arrange(p1, p2)
+# dev.off()
 
-ggsave(filename = "Plot_10_Error_for_Proportions_of_Pairings.pdf",
-       plot = plot.prop_pairings_seq_cov_errors_100,
+grid.arrange(p1, p2, p11, p22, ncol=2, nrow=2)
+
+ggsave(filename = "Plot_9_10_proportion_pairings_and_error_at_35_95_Coverage.pdf",
+       grid.arrange(p1, p2, p11, p22, ncol=2, nrow=2),
        path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
-       width = 26, height = 15, units = "cm")
+       width = 40, height = 25, units = "cm")
 
 
 
+# 
+# ggsave(filename = "Plot_10_Error_for_Proportions_of_Pairings.pdf",
+#        plot = plot.prop_pairings_seq_cov_errors_100,
+#        path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
+#        width = 26, height = 15, units = "cm")
 
-pdf("/home/david/age_mixing_patterns_phylogenetic/results/MCAR/Plot_9_10_proportion_pairings_and_error_at_35_95_Coverage.pdf",
-    width=15, height=15)
-gridExtra::grid.arrange(plot.prop_pairings_seq_cov_target_v, plot.prop_pairings_seq_cov_errors_100)
-dev.off()
+
+
 
 
 ```
@@ -7540,7 +7605,7 @@ AD.stats <- matrix(c(mean.MCAR.cov.35.AD.women.cl.15.25[2], mean.MCAR.cov.40.AD.
 ncol = 14,
 byrow = TRUE)
 
-AD.stats <- round(AD.stats, digits = 2)
+AD.stats <- round(AD.stats, digits = 3)
 
 colnames(AD.stats) <- c("35", "40", "45",
                         "50", "55", "60",
@@ -7828,16 +7893,17 @@ df_all <- rbind(mean.men.AD.df, mean.women.AD.df)
 
 colnames(df_all) <- c("cov", "F", "L", "U", "Parameter", "f_m")
 
-df_all$age_grps <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
+df_all$age_groups <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
 
 
 saveRDS(df_all, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR/MCAR_11_Mean_Age_Difference_at_35_95_Coverage.RDS")
 
 
-plot.mean.men.women.AD.df <- ggplot(df_all, aes(x=cov, y=F, colour=age_grps, group=Parameter)) + 
+plot.mean.men.women.AD.df <- ggplot(df_all, aes(x=cov, y=F, colour=age_groups, group=Parameter)) + 
   geom_line(size=1) +
   geom_point() +
   facet_grid(.~f_m)+
+  theme(legend.position="bottom")+
   # geom_errorbar(aes(ymin=L, ymax=U), width=.1) +
   # ggtitle("Mean age difference in MCAR") +
   xlab("Sampling Coverage (%)") + ylab("Mean Age Difference") # +
@@ -8106,12 +8172,13 @@ df_all_med <- rbind(med.men.AD.df, med.women.AD.df)
 
 colnames(df_all_med) <- c("cov", "F", "L", "U", "Parameter", "f_m")
 
-df_all_med$age_grps <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
+df_all_med$age_groups <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
 
-plot.med.men.women.AD.df <- ggplot(df_all_med, aes(x=cov, y=F, colour=age_grps, group=Parameter)) + 
+plot.med.men.women.AD.df <- ggplot(df_all_med, aes(x=cov, y=F, colour=age_groups, group=Parameter)) + 
   geom_line(size=1) +
   geom_point() +
   facet_grid(.~f_m)+
+  theme(legend.position="bottom")+
   # geom_errorbar(aes(ymin=L, ymax=U), width=.1) +
   # ggtitle("Mean age difference in MCAR") +
   xlab("Sampling Coverage (%)") + ylab("Median Age Difference") # +
@@ -8372,15 +8439,16 @@ df_all_sd <- rbind(sd.men.AD.df, sd.women.AD.df)
 
 colnames(df_all_sd) <- c("cov", "F", "L", "U", "Parameter", "f_m")
 
-df_all_sd$age_grps <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
+df_all_sd$age_groups <- c(rep("15_24", 14), rep("25_39", 14), rep("40_49", 14), rep("15_24", 14), rep("25_39", 14), rep("40_49", 14))
 
 saveRDS(df_all_sd, file = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR/MCAR_13_Standard_Deviation_Age_Difference_at_35_95_Coverage.RDS")
 
 
-plot.sd.men.women.AD.df <- ggplot(df_all_sd, aes(x=cov, y=F, colour=age_grps, group=Parameter)) + 
+plot.sd.men.women.AD.df <- ggplot(df_all_sd, aes(x=cov, y=F, colour=age_groups, group=Parameter)) + 
   geom_line(size=1)+
   geom_point() +
   facet_grid(.~f_m)+
+  theme(legend.position="bottom")+
   # geom_errorbar(aes(ymin=L, ymax=U), width=.1) +
   # ggtitle("Mean age difference in MCAR") +
   xlab("Sampling Coverage (%)") + ylab("Standard Deviation of Age Difference") # +
@@ -10900,13 +10968,13 @@ newdata_mean <- d_mean[order(d_mean$param),]
 
 newdata_mean$f_m <- c(rep("Females", nrow(newdata_mean)/2), rep("Males", nrow(newdata_mean)/2))
 
-newdata_mean$age_groups <- c(rep("15_25", nrow(RMSE.error.infer.clust.cov.100.men.15.25.AD.mean)),
-                             rep("25_40", nrow(RMSE.error.infer.clust.cov.100.men.25.40.AD.mean)),
-                             rep("40_50", nrow(RMSE.error.infer.clust.cov.100.men.40.50.AD.mean)),
+newdata_mean$age_groups <- c(rep("15_24", nrow(RMSE.error.infer.clust.cov.100.men.15.25.AD.mean)),
+                             rep("25_39", nrow(RMSE.error.infer.clust.cov.100.men.25.40.AD.mean)),
+                             rep("40_49", nrow(RMSE.error.infer.clust.cov.100.men.40.50.AD.mean)),
                              
-                             rep("15_25", nrow(RMSE.error.infer.clust.cov.100.women.15.25.AD.mean)),
-                             rep("25_40", nrow(RMSE.error.infer.clust.cov.100.women.25.40.AD.mean)),
-                             rep("40_50", nrow(RMSE.error.infer.clust.cov.100.women.40.50.AD.mean)))
+                             rep("15_24", nrow(RMSE.error.infer.clust.cov.100.women.15.25.AD.mean)),
+                             rep("25_39", nrow(RMSE.error.infer.clust.cov.100.women.25.40.AD.mean)),
+                             rep("40_49", nrow(RMSE.error.infer.clust.cov.100.women.40.50.AD.mean)))
 
 
 colnames(newdata_mean) <- c("cov", "val", "param", "f_m", "age_groups")
@@ -10917,7 +10985,7 @@ plot.mean.AD_seq_cov_errors_100 <- ggplot(newdata_mean, aes(x=cov, y=val, colour
   geom_line(size=1) +
   geom_point() +
   facet_grid(. ~ f_m) + 
-  # theme(legend.position="top")+
+  theme(legend.position="bottom")+
   xlab("Sampling Coverage (%)") + ylab("Error value for mean of age difference")
 
 print(plot.mean.AD_seq_cov_errors_100)
@@ -10959,13 +11027,13 @@ newdata_sd <- d_sd[order(d_sd$param),]
 
 newdata_sd$f_m <- c(rep("Females", nrow(newdata_sd)/2), rep("Males", nrow(newdata_sd)/2))
 
-newdata_sd$age_groups <- c(rep("15_25", nrow(RMSE.error.infer.clust.cov.100.men.15.25.AD.sd)),
-                             rep("25_40", nrow(RMSE.error.infer.clust.cov.100.men.25.40.AD.sd)),
-                             rep("40_50", nrow(RMSE.error.infer.clust.cov.100.men.40.50.AD.sd)),
+newdata_sd$age_groups <- c(rep("15_24", nrow(RMSE.error.infer.clust.cov.100.men.15.25.AD.sd)),
+                             rep("25_39", nrow(RMSE.error.infer.clust.cov.100.men.25.40.AD.sd)),
+                             rep("40_49", nrow(RMSE.error.infer.clust.cov.100.men.40.50.AD.sd)),
                              
-                             rep("15_25", nrow(RMSE.error.infer.clust.cov.100.women.15.25.AD.sd)),
-                             rep("25_40", nrow(RMSE.error.infer.clust.cov.100.women.25.40.AD.sd)),
-                             rep("40_50", nrow(RMSE.error.infer.clust.cov.100.women.40.50.AD.sd)))
+                             rep("15_24", nrow(RMSE.error.infer.clust.cov.100.women.15.25.AD.sd)),
+                             rep("25_39", nrow(RMSE.error.infer.clust.cov.100.women.25.40.AD.sd)),
+                             rep("40_49", nrow(RMSE.error.infer.clust.cov.100.women.40.50.AD.sd)))
 
 
 colnames(newdata_sd) <- c("cov", "val", "param", "f_m", "age_groups")
@@ -10978,7 +11046,7 @@ plot.sd.AD_seq_cov_errors_100 <- ggplot(newdata_sd, aes(x=cov, y=val, colour= ag
   geom_line(size=1)+
   geom_point() +
   facet_grid(. ~ f_m) + 
-  # theme(legend.position="top")+
+ theme(legend.position="bottom")+
   xlab("Sampling Coverage (%)") + ylab("Error value for SD of age difference")
 
 print(plot.sd.AD_seq_cov_errors_100)
@@ -10995,16 +11063,19 @@ pdf("/home/david/age_mixing_patterns_phylogenetic/results/MCAR/Plot_17_Error_Mea
 gridExtra::grid.arrange(plot.mean.AD_seq_cov_errors_100, plot.sd.AD_seq_cov_errors_100)
 dev.off()
 
-pdf("/home/david/age_mixing_patterns_phylogenetic/results/MCAR/Plot_11_15_Mean_Age_Difference_and_Error_at_35_95_Coverage.pdf",
-    width=15, height=15)
-gridExtra::grid.arrange(plot.mean.men.women.AD.df, plot.mean.AD_seq_cov_errors_100)
-dev.off()
 
 
-pdf("/home/david/age_mixing_patterns_phylogenetic/results/MCAR/Plot_13_16_SD_Age_Difference_and_Error_at_35_95_Coverage.pdf",
-    width=15, height=15)
-gridExtra::grid.arrange(plot.sd.men.women.AD.df, plot.sd.AD_seq_cov_errors_100)
-dev.off()
+ggsave(filename = "Plot_11_15_Mean_Age_Difference_and_Error_at_35_95_Coverage.pdf",
+       grid.arrange(plot.mean.men.women.AD.df, plot.mean.AD_seq_cov_errors_100, nrow=2),
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
+       width = 40, height = 25, units = "cm")
+
+
+
+ggsave(filename = "Plot_13_16_SD_Age_Difference_and_Error_at_35_95_Coverage.pdf",
+       grid.arrange(plot.sd.men.women.AD.df, plot.sd.AD_seq_cov_errors_100, nrow=2),
+       path = "/home/david/age_mixing_patterns_phylogenetic/results/MCAR",
+       width = 40, height = 25, units = "cm")
 
 
 
