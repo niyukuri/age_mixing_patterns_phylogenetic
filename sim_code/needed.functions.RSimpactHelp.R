@@ -1,6 +1,9 @@
 
 
 
+# This script contains some utility functions
+
+
 bvar <- function(model) {
   
   # Outputs a df with between-subject variance, upr & lwr limits
@@ -13,9 +16,7 @@ bvar <- function(model) {
 }
 
 
-# Calculate the transmission rate
-###################################
-
+# transmission rate
 
 transmission.rate.calculator <- function(datalist = datalist,
                                          timewindow = c(20, 40), int = FALSE, by=1){
@@ -66,8 +67,8 @@ transmission.rate.calculator <- function(datalist = datalist,
 }
 
 
-# Relationship rate
-#####################
+# relationship rate
+
 
 
 relationship.rate.calculator <- function(datalist = datalist,
@@ -124,8 +125,8 @@ relationship.rate.calculator <- function(datalist = datalist,
 }
 
 
-# age mixing pattern model
-###########################
+# age mixing patterns - mixed effect model
+
 
 ampmodel <- function(data = dplyr::filter(agemix.model[[1]], Gender =="male")) {
   lmer(pagerelform ~ agerelform0 + (1 | ID),
@@ -134,9 +135,7 @@ ampmodel <- function(data = dplyr::filter(agemix.model[[1]], Gender =="male")) {
 }
 
 
-# Concurrency point prevalence 6 months before a survey, among men
-####################################################################
-
+# concurrency point prevalence 6 months before a survey, among men
 
 concurr.pointprev.calculator <- function(datalist = datalist,
                                          timepoint = datalist$itable$population.simtime[1] - 0.5){
@@ -166,7 +165,7 @@ concurr.pointprev.calculator <- function(datalist = datalist,
 
 
 # ART coverage
-###############
+
 
 ART.coverage.vector.creator <- function(datalist = datalist,
                                         agegroup = c(15, 50)){
@@ -218,8 +217,7 @@ plot.parboot.ltt.dat <- function (pbtd, t0 = NA, res = 100, ...)
 # (p <- p + ylab("Lineages through time") + xlab("Time"))
 
 
-# Age mixing in transmission
-#############################
+# age mixing in transmission: transmission table
 
 agemixing.trans.df <- function(trans.network = trans.network,
                                limitTransmEvents = 7){
@@ -279,8 +277,7 @@ agemixing.trans.df <- function(trans.network = trans.network,
 }
 
 
-# Fit age mixing in transmission
-################################
+# fit mixed effect model to age mixing data
 
 fit.agemix.trans.men <- function(datatable = agemix.df){
   
@@ -319,8 +316,7 @@ fit.agemix.trans.women <- function(datatable = agemix.df){
 
 
 
-# Onward transmissions
-######################
+# onward transmissions
 
 onwardtransmissions.dat <- function(datalist = datalist, 
                                     trans.network = trans.network,
@@ -376,7 +372,7 @@ onwardtransmissions.dat <- function(datalist = datalist,
 }
 
 
-# New transmissions
+# new transmissions
 
 new.transmissions.dat <- function(datalist = datalist, 
                                   time.window=c(10,40)){
@@ -395,21 +391,13 @@ new.transmissions.dat <- function(datalist = datalist,
   return(pers.infec.IDs)
 }
 
+
+
 # compute phylogenetic features
-
-
-
-
 
 phylogenetic.features.fun <- function(tree.topo=tree,
                                       tree.calib.LTT = tree.calib.LTT){
-  
-  ########################################
-  ### FEATURES FROM PHYLOGENETIC TREE ####
-  ########################################
-  
-  
-  # 1.3. Features from phylogenetic tree:
+
   
   # library(phytools)
   
