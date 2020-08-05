@@ -186,7 +186,7 @@ age.mixing.MAR.fun <- function(simpact.trans.net = simpact.trans.net.adv,
     agemix.model <- pattern.modeller(dataframe = agemix.rels.transm.df,
                                      agegroup = c(15, 50),
                                      timepoint = 40, # transm.datalist.agemix$itable$population.simtime[1],
-                                     timewindow = 10)#1)#3)
+                                     timewindow = 5)#1)#3)
     # 
     # # men.lme <- tryCatch(agemixing.lme.fitter(data = dplyr::filter(agemix.model[[1]], Gender =="male")),
     # #                     error = agemixing.lme.errFunction) # Returns an empty list if the lme model can't be fitted
